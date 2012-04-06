@@ -10,7 +10,6 @@ namespace RobotControllerLib
         public Joint ElbowTwist { get; private set; }
         public Joint ElbowExtend { get; private set; }
 
-
         public Arm(NxtMotor shoulderTwistMotor, NxtMotor shoulderExtendMotor, NxtMotor elbowTwistMotor, NxtMotor elbowExtendMotor)
         {
             ShoulderTwist = new Joint(shoulderTwistMotor);

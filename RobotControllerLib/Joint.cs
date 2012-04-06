@@ -40,8 +40,10 @@ namespace RobotControllerLib
 
         public Joint(NxtMotor motor)
         {
-            Motor = motor;
-            motor.ResetMotorPosition(true);
+            if (motor != null) {
+                Motor = motor;
+                motor.ResetMotorPosition(true);
+            }
 
             UpdateFreq = 10;
             MoveStep = 2;
