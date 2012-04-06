@@ -173,7 +173,7 @@ namespace RobotSimulator.Model
         //leftHand -> leftLowerArm -> LEFTELBOWMOTOR1 -> LEFTELBOWMOTOR2 -> leftElbow -> leftUpperArm ->
         //LEFTUPPERMOTOR1 -> LEFTUPPERMOTOR2 -> leftArmJoin ->
         //CHESTMOTOR -> chest -> base -> DONE
-        public Point3D getLeftHandCentreCoord(double? leftElbowMotorAngle1,
+        public Point3D getLeftHandCoords(double? leftElbowMotorAngle1,
             double? leftElbowMotorAngle2, double? leftShoulderMotorAngle1,
             double? leftShoulderMotorAngle2, double? chestMotorAngle, Point3D point)
         {
@@ -266,7 +266,7 @@ namespace RobotSimulator.Model
         //rightHand -> rightLowerArm -> RIGHTELBOWMOTOR1 -> RIGHTELBOWMOTOR2 -> rightElbow -> rightUpperArm ->
         //RIGHTUPPERMOTOR1 -> RIGHTUPPERMOTOR2 -> rightArmJoin ->
         //CHESTMOTOR -> chest -> base -> DONE
-        public Point3D getRightHandCentreCoord(double? rightElbowMotorAngle1,
+        public Point3D getRightHandCoords(double? rightElbowMotorAngle1,
             double? rightElbowMotorAngle2, double? rightShoulderMotorAngle1,
             double? rightShoulderMotorAngle2, double? chestMotorAngle, Point3D point)
         {
