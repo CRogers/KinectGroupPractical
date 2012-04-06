@@ -1,7 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RobotSimulator", "RobotSimulator\RobotSimulator.csproj", "{171BD84B-3805-40A8-8332-D4F68E8862E8}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{171BD84B-3805-40A8-8332-D4F68E8862E8}.Debug|x86.ActiveCfg = Debug|x86
+		{171BD84B-3805-40A8-8332-D4F68E8862E8}.Debug|x86.Build.0 = Debug|x86
+		{171BD84B-3805-40A8-8332-D4F68E8862E8}.Release|x86.ActiveCfg = Release|x86
+		{171BD84B-3805-40A8-8332-D4F68E8862E8}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
