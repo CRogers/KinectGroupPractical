@@ -57,6 +57,7 @@
     </ApplicationDefinition>
     <Compile Include="Controller\KeyInputController.cs" />
     <Compile Include="Linker.cs" />
+    <Compile Include="Model\PositionCalculator.cs" />
     <Compile Include="Model\I_MotorListener.cs" />
     <Compile Include="Model\MotorManager.cs" />
     <Compile Include="Utility\MoreMaths.cs" />
@@ -76,11 +77,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Views\Robot.cs" />
+    <Compile Include="Model\Robot.cs" />
     <Compile Include="Views\FocussedCamera.cs" />
-    <Compile Include="Views\Axis.cs" />
-    <Compile Include="Views\Shapes.cs" />
-    <Compile Include="Views\Transforms.cs" />
+    <Compile Include="Model\Axis.cs" />
+    <Compile Include="Model\Shapes.cs" />
+    <Compile Include="Model\Transforms.cs" />
     <Compile Include="Utility\I_Observable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

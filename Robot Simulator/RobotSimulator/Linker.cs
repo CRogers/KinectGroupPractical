@@ -19,8 +19,10 @@ namespace RobotSimulator
         {
             //Now initialise the display!
             MotorManager motorManager = new MotorManager();
-            ViewPlatform platform = new ViewPlatform(viewport, motorManager);
-            KeyInputController keyController = new KeyInputController(motorManager);
+            Robot robot = new Robot();
+            ViewPlatform platform = new ViewPlatform(viewport, motorManager, robot);
+            PositionCalculator positionCalculator = new PositionCalculator(robot, motorManager);
+            KeyInputController keyController = new KeyInputController(motorManager, positionCalculator);
         }
 
         //Create a linker with a key handler, enabling you to move the camera with the WASDEFZX keys.
@@ -29,8 +31,10 @@ namespace RobotSimulator
         {
             //Now initialise the display!
             MotorManager motorManager = new MotorManager();
-            ViewPlatform platform = new ViewPlatform(viewport, motorManager);
-            KeyInputController keyController = new KeyInputController(motorManager);
+            Robot robot = new Robot();
+            ViewPlatform platform = new ViewPlatform(viewport, motorManager, robot);
+            PositionCalculator positionCalculator = new PositionCalculator(robot, motorManager);
+            KeyInputController keyController = new KeyInputController(motorManager, positionCalculator);
             if (keyHandler != null)
             {
                 keyHandler.addListener(keyController);

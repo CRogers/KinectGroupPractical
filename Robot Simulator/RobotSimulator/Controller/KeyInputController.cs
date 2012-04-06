@@ -5,6 +5,7 @@ using System.Text;
 using RobotSimulator.Utility;
 using RobotSimulator.Model;
 using System.Windows.Input;
+using System.Windows.Media.Media3D;
 
 namespace RobotSimulator.Controller
 {
@@ -15,8 +16,10 @@ namespace RobotSimulator.Controller
     class KeyInputController : I_KeyListener
     {
         private MotorManager motorManager;
-        public KeyInputController(MotorManager motorManager)
+        private PositionCalculator positionCalculator;
+        public KeyInputController(MotorManager motorManager, PositionCalculator positionCalculator)
         {
+            this.positionCalculator = positionCalculator;
             this.motorManager = motorManager;
             //You can attach yourself to listen to the motors:
             //motorManager.addListener(this);
@@ -27,7 +30,7 @@ namespace RobotSimulator.Controller
             {
                 case Key.D0: //the neck motor
                     //Tell the motor manager to change motor instantaneously:
-                    motorManager.setMotorDegrees(MotorManager.NECK_MOTOR1, motorManager.getMotorDegrees(MotorManager.NECK_MOTOR1) + (255.0 / 4.0), 0.8, 10);
+                    motorManager.setMotorDegrees(MotorManager.NECK_MOTOR1, motorManager.getMotorDegrees(MotorManager.NECK_MOTOR1) + (255 / 4.0), 0.8, 10);
                     break;
                 case Key.D1: //the chest motor
                     motorManager.setMotorDegrees(MotorManager.CHEST_MOTOR1, motorManager.getMotorDegrees(MotorManager.CHEST_MOTOR1) + (255 / 4.0), 0.8, 10);
@@ -55,6 +58,30 @@ namespace RobotSimulator.Controller
                     break;
                 case Key.D9: //the right elbow motor 2
                     motorManager.setMotorDegrees(MotorManager.RIGHT_ELBOW_MOTOR2, motorManager.getMotorDegrees(MotorManager.RIGHT_ELBOW_MOTOR2) + (255 / 4.0), 0.8, 10);
+                    break;
+                case Key.H: //return the coordinates of the head
+                    System.Windows.MessageBox.Show("Head");
+                    System.Windows.MessageBox.Show(positionCalculator.getHeadCoords(null, null, new Point3D(0,0,0)).ToString());
+                    break;
+                case Key.C: //return the coordinates of the chest
+                    System.Windows.MessageBox.Show("Chest");
+                    System.Windows.MessageBox.Show(positionCalculator.getChestCoords(null,new Point3D(0,0,0)).ToString());
+                    break;
+                case Key.B: //return the coordinates of the base
+                    System.Windows.MessageBox.Show("Base");
+                    System.Windows.MessageBox.Show(positionCalculator.getBaseCoords(new Point3D(0,0,0)).ToString());
+                    break;
+                case Key.N: //return the coordinates of the left arm joint
+                    System.Windows.MessageBox.Show("Left Arm Joint");
+                    System.Windows.MessageBox.Show(positionCalculator.getLeftArmJoinCoords(null, new Point3D(0, 0, 0)).ToString());
+                    break;
+                case Key.M: //return the coordinates of the left upper arm
+                    System.Windows.MessageBox.Show("Left Upper Arm");
+                    System.Windows.MessageBox.Show(positionCalculator.getLeftUpperArmCoords(null,null,null,new Point3D(0,0,0)).ToString());
+                    break;
+                case Key.J: //return the coordinates of the left lower arm
+                    System.Windows.MessageBox.Show("Left Lower Arm");
+                    System.Windows.MessageBox.Show(positionCalculator.getLeftLowerArmCoords(null,null,null,null,null,new Point3D(0,0,0)).ToString());
                     break;
                 default:
                     break;
