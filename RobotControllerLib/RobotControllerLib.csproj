@@ -37,6 +37,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Arm.cs" />
     <Compile Include="Joint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
