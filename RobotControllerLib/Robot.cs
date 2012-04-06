@@ -3,7 +3,7 @@ using NKH.MindSqualls;
 
 namespace RobotControllerLib
 {
-    class Robot
+    public class Robot
     {
         public Arm LeftArm { get; private set; }
         public Arm RightArm { get; private set; }

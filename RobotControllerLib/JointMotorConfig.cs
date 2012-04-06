@@ -4,7 +4,7 @@ using NKH.MindSqualls;
 
 namespace RobotControllerLib
 {
-    class JointMotorConfig
+    public class JointMotorConfig
     {
         public int[] ComPorts { get; private set; }
         public Dictionary<string, Tuple<int, NxtMotorPort?>> JointMotorMapping { get; private set; }

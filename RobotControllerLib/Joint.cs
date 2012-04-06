@@ -4,7 +4,7 @@ using NKH.MindSqualls;
 
 namespace RobotControllerLib
 {
-    class Joint
+    public class Joint
     {
         public int TargetAngle { get; set; }
         public int CurrentAngle { get; private set; }

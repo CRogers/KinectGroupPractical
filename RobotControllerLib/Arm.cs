@@ -2,7 +2,7 @@
 
 namespace RobotControllerLib
 {
-    class Arm
+    public class Arm
     {
         public Joint ShoulderTwist { get; private set; }
         public Joint ShoulderExtend { get; private set; }
