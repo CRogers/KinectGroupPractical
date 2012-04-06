@@ -23,8 +23,11 @@ namespace RobotSimulator.View
         private Robot robot; //the robot to display!
         private Model3DGroup outerModel;
         private MotorManager motorManager;
-        public ViewPlatform(Viewport3D viewport, MotorManager motorManager)
+        private MatrixTransform3D currentMatTransform; //for transforming efficiently for the camera
+        public ViewPlatform(Viewport3D viewport, MotorManager motorManager, Robot robot)
         {
+            this.robot = robot;
+            robot.intialise(viewport);
             this.motorManager = motorManager;
             //Add myself as a listener for the motor manager:
             this.motorManager.addListener(this);
@@ -40,10 +43,12 @@ namespace RobotSimulator.View
             viewport.Children.Add(visual);
             ModelVisual3D visual2 = new ModelVisual3D();
             //Now add in the robot too!
-            robot = new Robot(viewport);
             updateMotors();
             outerModel = new Model3DGroup();
             outerModel.Children.Add(robot.getRobot());
+            currentMatTransform = (MatrixTransform3D)MatrixTransform3D.Identity;
+            TranslateTransform3D trans = new TranslateTransform3D();
+            outerModel.Children[0] = Transforms.applyTransform((Model3DGroup)outerModel.Children[0],currentMatTransform);
             visual2.Content = outerModel;
             viewport.Children.Add(visual2);
             //Phew! That should be it...
@@ -88,32 +93,55 @@ namespace RobotSimulator.View
 
         public void KeyPressed(KeyEventArgs e)
         {
+            Matrix3DConverter conv = new Matrix3DConverter();
+
+            Transform3D trans;
+            Matrix3D mat;
             //Warning: memory hog at the moment. Does not combine 3D rotations!
             switch (e.Key)
             {
                 case Key.S:
-                    //Rotate the object 
-                    outerModel.Children[0] = Transforms.applyTransform((Model3DGroup)outerModel.Children[0], Transforms.makeAxisTransform(Axis.X, 5));
+                    //Rotate the object
+                    trans = (Transform3D)Transforms.makeAxisTransform(Axis.X, 5);
+                    mat = Matrix3D.Multiply(trans.Value, currentMatTransform.Value);
+                    currentMatTransform = new MatrixTransform3D(mat);
+                    outerModel.Children[0].Transform = currentMatTransform;
                     break;
                 case Key.A:
                     //Reduce the azimuth:
-                    outerModel.Children[0] = Transforms.applyTransform((Model3DGroup)outerModel.Children[0], Transforms.makeAxisTransform(Axis.Y, 5));
+                    trans = (Transform3D)Transforms.makeAxisTransform(Axis.Y, 5);
+                    mat = Matrix3D.Multiply(trans.Value, currentMatTransform.Value);
+                    currentMatTransform = new MatrixTransform3D(mat);
+                    outerModel.Children[0].Transform = currentMatTransform;
                     break;
                 case Key.D:
                     //Increase the azimuth:
-                    outerModel.Children[0] = Transforms.applyTransform((Model3DGroup)outerModel.Children[0], Transforms.makeAxisTransform(Axis.Y, -5));
+                    trans = (Transform3D)Transforms.makeAxisTransform(Axis.Y, -5);
+                    //System.Windows.MessageBox.Show(trans.Value.ToString());
+                    mat = Matrix3D.Multiply(trans.Value, currentMatTransform.Value);
+                    currentMatTransform = new MatrixTransform3D(mat);
+                    outerModel.Children[0].Transform = currentMatTransform;
                     break;
                 case Key.W:
                     //Increase the inclination:
-                    outerModel.Children[0] = Transforms.applyTransform((Model3DGroup)outerModel.Children[0], Transforms.makeAxisTransform(Axis.X, -5));
+                    trans = (Transform3D)Transforms.makeAxisTransform(Axis.X, -5);
+                    mat = Matrix3D.Multiply(trans.Value, currentMatTransform.Value);
+                    currentMatTransform = new MatrixTransform3D(mat);
+                    outerModel.Children[0].Transform = currentMatTransform;
                     break;
                 case Key.E:
                     //Increase the inclination:
-                    outerModel.Children[0] = Transforms.applyTransform((Model3DGroup)outerModel.Children[0], Transforms.makeAxisTransform(Axis.Z, 5));
+                    trans = (Transform3D)Transforms.makeAxisTransform(Axis.Z, 5);
+                    mat = Matrix3D.Multiply(trans.Value, currentMatTransform.Value);
+                    currentMatTransform = new MatrixTransform3D(mat);
+                    outerModel.Children[0].Transform = currentMatTransform;
                     break;
                 case Key.F:
                     //Increase the inclination:
-                    outerModel.Children[0] = Transforms.applyTransform((Model3DGroup)outerModel.Children[0], Transforms.makeAxisTransform(Axis.Z, -5));
+                    trans = (Transform3D)Transforms.makeAxisTransform(Axis.Z, -5);
+                    mat = Matrix3D.Multiply(trans.Value, currentMatTransform.Value);
+                    currentMatTransform = new MatrixTransform3D(mat);
+                    outerModel.Children[0].Transform = currentMatTransform;
                     break;
                 case Key.Z:
                     //Zoom in:
@@ -152,7 +180,7 @@ namespace RobotSimulator.View
             //Update the motor position on the robot.
             //The incoming value is in degrees from 0 to 255 (roughly), so adjust to
             //360 degrees first:
-            degrees = ((degrees / 255) * 360);
+            degrees = Utility.MoreMaths.fromMotorAngle(degrees);
             //Now set the motor:
             switch (motor)
             {
