@@ -21,7 +21,7 @@ namespace RobotControllerLib
             // Make bluetooth connections - if it is -1 don't make connection
             nxtBricks = new NxtBrick[jmc.ComPorts.Length];
             for(int i = 0; i < jmc.ComPorts.Length; i++) {
-                var comPort = jmc.ComPorts[0];
+                var comPort = jmc.ComPorts[i];
                 if(comPort != -1) {
                     var brick = new NxtBrick(NxtCommLinkType.Bluetooth, (byte)comPort);
                     nxtBricks[i] = brick;

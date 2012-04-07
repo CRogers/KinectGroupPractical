@@ -43,13 +43,14 @@ namespace RobotControllerLib
             if (motor != null) {
                 Motor = motor;
                 motor.ResetMotorPosition(true);
+
+                // Turn the joint on
+                Active = true;
             }
+            
 
             UpdateFreq = 10;
             MoveStep = 2;
-
-            // Turn the joint on
-            Active = true;
         }
 
 
