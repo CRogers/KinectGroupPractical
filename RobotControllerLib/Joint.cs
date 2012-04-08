@@ -6,9 +6,12 @@ namespace RobotControllerLib
 {
     public class Joint
     {
+        private int initialTacho;
+
         public int TargetAngle { get; set; }
         public int CurrentAngle { get; private set; }
         public NxtMotor Motor { get; set; }
+        public int DegreeScaleFactor { get; set; }
 
         private bool _active = false;
         public bool Active
@@ -19,11 +22,9 @@ namespace RobotControllerLib
                 // If we're turning it on again restart the thread
                 if (value && !_active)
                     StartUpdateThread();
+                _active = value;
             }
         }
-
-        public int UpdateFreq { get; set; }
-        public uint MoveStep { get; set; }
 
         public byte _power = 100;
         public byte Power
@@ -43,14 +44,16 @@ namespace RobotControllerLib
             if (motor != null) {
                 Motor = motor;
                 motor.ResetMotorPosition(true);
+                
+                // Poll so tacho is not null
+                motor.Poll();
+                initialTacho = motor.GetNormalisedTacho();
 
                 // Turn the joint on
                 Active = true;
             }
-            
 
-            UpdateFreq = 10;
-            MoveStep = 2;
+            DegreeScaleFactor = 1;
         }
 
 
@@ -64,14 +67,22 @@ namespace RobotControllerLib
         {
             while(Active) {
                 // Convert the tachoCount (degrees moved by the motor) to absolute degrees
-                CurrentAngle = (Motor.TachoCount ?? 0) % 360;
+                // TODO: What happens if the joint goes backwards and this becomes negative?
+                CurrentAngle = ((Motor.GetNormalisedTacho() - initialTacho) / DegreeScaleFactor) % 360;
 
                 // Move the motor either increasing or decreasing depending on where we are trying to get to
                 var power = (sbyte)(TargetAngle > CurrentAngle ? Power : -Power);
-                Motor.Run(power, MoveStep);
+                var rawDiff = Math.Abs(TargetAngle - CurrentAngle);
+                var diff = rawDiff * DegreeScaleFactor;
 
-                // Sleep for some time
-                Thread.Sleep(UpdateFreq);
+                Console.WriteLine("Curr ang: {0}, Target: {1}, Diff: {2}, Power: {3}", CurrentAngle, TargetAngle, diff, power);
+
+                if (rawDiff > 5) {
+                    Motor.RunUntil(power, (uint) diff);
+                }
+                else {
+                    Thread.Sleep(50);
+                }
             }
         }
     }

@@ -17,17 +17,53 @@ namespace RobotControllerConsole
             var motorA = new NxtMotor();
             brick.MotorA = motorA;
 
+            var motorB = new NxtMotor();
+            brick.MotorB = motorB;
+
+            var motorC = new NxtMotor();
+            brick.MotorC = motorC;
+
             brick.Connect();
             Console.WriteLine("Connected to NXTBrick");
 
             motorA.ResetMotorPosition(false);
             motorA.PollInterval = 5;
             motorA.Poll();
-            Console.WriteLine(motorA.PollInterval);
+
+            motorB.ResetMotorPosition(false);
+            motorB.PollInterval = 5;
+            motorB.Poll();
+
+            motorC.ResetMotorPosition(false);
+            motorC.PollInterval = 5;
+            motorC.Poll();
+
+            /*Joint a = new Joint(motorA);
+            a.TargetAngle = 30;
+            a.Power = 5;*/
+
+            Joint b = new Joint(motorB);
+            b.TargetAngle = 30;
+            b.DegreeScaleFactor = 24;
+
+            Joint c = new Joint(motorC);
+            c.TargetAngle = 40;
+            c.DegreeScaleFactor = 24;
+            
+            Console.ReadLine();
+            motorA.Brake();
+            motorB.Brake();
+            motorC.Brake();
+
+            brick.Disconnect();
+
+            /*
+            // Get angle
+            Console.WriteLine("{0}, {1}", motorB.TachoCount, motorB.TachoCount % 360);
 
             for (int i = 0; i < 5; i++) {
                 Console.WriteLine("start");
-                motorA.RunUntil(100, 800);
+                motorB.RunUntil(-100, 720);
                 Console.WriteLine("end");
             }
             /*
@@ -57,18 +93,35 @@ namespace RobotControllerConsole
 
             Console.WriteLine("running");
             motor.Run(power, 0);
-
             Console.WriteLine("waiting");
-            while (true) {
-                Console.WriteLine(motor.TachoCount - initTacho);
-                if (motor.TachoCount + 90 >= endTacho)
-                    break;
+            while (motor.TachoCount + 30 < endTacho) {
                 Thread.Sleep(motor.PollInterval);
             }
             motor.Brake();
-            Thread.Sleep(1000);
+            Thread.Sleep(motor.PollInterval*2);
             Console.WriteLine("fin wait {0}", motor.TachoCount - initTacho);
-            Thread.Sleep(1000);
+        }
+
+        public static void RunWait(this NxtMotor motor, sbyte power, uint degrees)
+        {
+            motor.Poll();
+            var initTacho = motor.TachoCount.Value;
+
+            motor.Run(power, degrees);
+            Thread.Sleep(motor.PollInterval*2);
+
+            var lastTacho = motor.TachoCount.Value;
+            for (int i = 0; i < 20; i++)
+            {
+                var tcount = motor.TachoCount.Value;
+                if (tcount < initTacho+degrees/2 || lastTacho != tcount) {
+                    i = 0;
+                }
+                lastTacho = tcount;
+                Thread.Sleep(8);
+            }
+
+            Console.WriteLine("fin wait {0}", motor.TachoCount - initTacho);
         }
     }
 }
