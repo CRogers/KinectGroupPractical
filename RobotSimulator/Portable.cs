@@ -22,6 +22,7 @@ namespace RobotSimulator
         private PositionCalculator positionCalculator;
         private ViewPlatform platform;
         private Robot robot;
+        //Constants for specifying the direction the motor should move in.
         public const bool INCREASING = true, DECREASING = false;
         /// <summary>
         /// Create a new Portable object. This class is designed specifically to be imported by other solutions. By calling this constructor,
@@ -88,6 +89,16 @@ namespace RobotSimulator
         public PositionCalculator positions()
         {
             return positionCalculator;
+        }
+
+        /// <summary>
+        /// Return the angle of the motor as it is right now.
+        /// </summary>
+        /// <param name="motor">The motor you are interested in. (Use the constants from MotorManager)</param>
+        /// <returns></returns>
+        public double getMotor(int motor)
+        {
+            return MoreMaths.fromMotorAngle(motorManager.getMotorDegrees(motor));
         }
 
         /// <summary>
