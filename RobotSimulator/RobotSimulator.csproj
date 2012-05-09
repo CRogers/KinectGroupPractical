@@ -106,7 +106,12 @@
     </None>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\RobotControllerLib\RobotControllerLib.csproj">
+      <Project>{21D11E0D-B0A2-45F5-8FBA-319CEC6FC077}</Project>
+      <Name>RobotControllerLib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

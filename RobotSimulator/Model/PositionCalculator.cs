@@ -141,7 +141,7 @@ namespace RobotSimulator.Model
         }
 
         //The actual function:
-        public Point3D getLeftElbowCentreCoords(double? leftShoulderMotorAngle1,
+        private Point3D getLeftElbowCentreCoords(double? leftShoulderMotorAngle1,
             double? leftShoulderMotorAngle2, double? chestMotorAngle, Point3D point)
         {
             return getLeftUpperArmCoords(leftShoulderMotorAngle1,leftShoulderMotorAngle2,chestMotorAngle,robot.leftElbowTransform.Transform(point));
@@ -234,7 +234,7 @@ namespace RobotSimulator.Model
         }
 
         //The actual function:
-        public Point3D getRightElbowCentreCoords(double? rightShoulderMotorAngle1,
+        private Point3D getRightElbowCentreCoords(double? rightShoulderMotorAngle1,
             double? rightShoulderMotorAngle2, double? chestMotorAngle, Point3D point)
         {
             return getRightUpperArmCoords(rightShoulderMotorAngle1, rightShoulderMotorAngle2, chestMotorAngle, robot.rightElbowTransform.Transform(point));
