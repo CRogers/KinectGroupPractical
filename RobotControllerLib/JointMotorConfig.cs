@@ -7,6 +7,7 @@ namespace RobotControllerLib
     public class JointMotorConfig
     {
         public int[] ComPorts { get; private set; }
+        public NxtCommLinkType[] LinkTypes { get; private set; }
         public Dictionary<string, Tuple<int, NxtMotorPort?>> JointMotorMapping { get; private set; }
 
         public MotorPort LeftShoulderAlong { get; set; }
@@ -18,12 +19,14 @@ namespace RobotControllerLib
         public MotorPort RightElbowAlong { get; set; }
         public MotorPort RightElbowOut { get; set; }
 
-        public JointMotorConfig(int comPort1, int comPort2, int comPort3)
+        public JointMotorConfig(int comPort1, NxtCommLinkType link1, int comPort2, NxtCommLinkType link2, int comPort3, NxtCommLinkType link3)
         {
             ComPorts = new[] {comPort1, comPort2, comPort3};
+            LinkTypes = new[] {link1, link2, link3};
         }
 
-        public static JointMotorConfig Default = new JointMotorConfig(3, 9, 11)
+        // Bluetooth: 3, 9, 11. USB: -, 1, -
+        public static JointMotorConfig Default = new JointMotorConfig(-1, NxtCommLinkType.Bluetooth, 1, NxtCommLinkType.USB, -1, NxtCommLinkType.Bluetooth)
         {
             LeftShoulderAlong =  new MotorPort(NxtMotorPort.PortB, 0),
             LeftShoulderOut =    new MotorPort(NxtMotorPort.PortB, 1),

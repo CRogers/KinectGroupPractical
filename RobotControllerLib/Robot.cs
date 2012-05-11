@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using NKH.MindSqualls;
 using Restrictor;
@@ -30,16 +29,16 @@ namespace RobotControllerLib
             for (int i = 0; i < jmc.ComPorts.Length; i++) {
                 var comPort = jmc.ComPorts[i];
                 if (comPort != -1) {
-                    int j = i;
-                    connectTasks[i] = new Task<NxtBrick>(() => ConnectBrick(j, comPort));
+                    int j = i; // Prevent access to modified closure
+                    connectTasks[i] = new Task<NxtBrick>(() => ConnectBrick(j, jmc.LinkTypes[j], comPort));
                     connectTasks[i].Start();
                 }
             }
 
-            Task.WaitAll(connectTasks);
+            Task.WaitAll(connectTasks.Where(a => a != null).ToArray());
 
             for (int i = 0; i < connectTasks.Length; i++) {
-                nxtBricks[i] = connectTasks[i].Result;
+                nxtBricks[i] = connectTasks[i] == null ? null : connectTasks[i].Result;
             }
 
             // Add joints
@@ -47,22 +46,24 @@ namespace RobotControllerLib
             RightArm = new Arm(AddMotorToNxt(jmc.RightShoulderAlong), AddMotorToNxt(jmc.RightShoulderOut), AddMotorToNxt(jmc.RightElbowAlong), AddMotorToNxt(jmc.RightElbowOut));
         }
 
-        private NxtBrick ConnectBrick(int brickNo, int comPort)
+        private NxtBrick ConnectBrick(int brickNo, NxtCommLinkType linkType, int comPort)
         {
-            var brick = new NxtBrick(NxtCommLinkType.Bluetooth, (byte)comPort);
-            var attempts = 3;
-            for (int attempt = 0; attempt < attempts; attempt++) {
-                Console.WriteLine("Connecting to brick {0} on port {1}. \t\tAttempt {2} of {3}...", brickNo, comPort, attempt + 1, attempts);
-                try {
-                    brick.Connect();
-                    Console.WriteLine("\tBrick {0} successfully connected (port: {1})", brickNo, comPort);
-                    break;
-                } catch(IOException) {
-                    if (attempt + 1 == attempts)
-                        throw;
-                } catch(AggregateException) {
-                    if (attempt + 1 == attempts)
-                        throw;
+            var brick = new NxtBrick(linkType, (byte)comPort);
+
+            if (linkType == NxtCommLinkType.Bluetooth) {
+                var attempts = 3;
+                for (int attempt = 0; attempt < attempts; attempt++) {
+                    Console.WriteLine("Connecting to brick {0} on port {1}. \t\tAttempt {2} of {3}...", brickNo, comPort,
+                                      attempt + 1, attempts);
+                    try {
+                        brick.Connect();
+                        Console.WriteLine("\tBrick {0} successfully connected (port: {1})", brickNo, comPort);
+                        break;
+                    }
+                    catch (IOException) {
+                        if (attempt + 1 == attempts)
+                            throw;
+                    }
                 }
             }
 
@@ -75,7 +76,8 @@ namespace RobotControllerLib
             Halt();
 
             foreach(var brick in nxtBricks)
-                brick.Disconnect();
+                if(brick != null)
+                    brick.Disconnect();
         }
 
         public void Halt()
@@ -96,6 +98,9 @@ namespace RobotControllerLib
         {
             var motor = new NxtMotor();
             var brick = nxtBricks[mp.Brick];
+
+            if (brick == null)
+                return null;
 
             switch(mp.Motor) {
                 case NxtMotorPort.PortA: brick.MotorA = motor; break;
