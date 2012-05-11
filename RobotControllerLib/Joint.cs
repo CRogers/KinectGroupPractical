@@ -44,7 +44,9 @@ namespace RobotControllerLib
             if (motor != null) {
                 Motor = motor;
                 motor.ResetMotorPosition(true);
-                
+
+                motor.PollInterval = 5;
+
                 // Poll so tacho is not null
                 motor.Poll();
                 initialTacho = motor.GetNormalisedTacho();
@@ -58,7 +60,8 @@ namespace RobotControllerLib
 
         public void Halt()
         {
-            Motor.Brake();
+            if(Motor != null)
+                Motor.Brake();
             Active = false;
         }
 
@@ -80,7 +83,8 @@ namespace RobotControllerLib
                 var rawDiff = Math.Abs(TargetAngle - CurrentAngle);
                 var diff = rawDiff * DegreeScaleFactor;
 
-                Console.WriteLine("Curr ang: {0}, Target: {1}, Diff: {2}, Power: {3}", CurrentAngle, TargetAngle, diff, power);
+                if(TargetAngle != 0)
+                    Console.WriteLine("Curr ang: {0}, Target: {1}, Diff: {2}, Power: {3}", CurrentAngle, TargetAngle, diff, power);
 
                 if (rawDiff > 5) {
                     Motor.RunUntil(power, (uint) diff);

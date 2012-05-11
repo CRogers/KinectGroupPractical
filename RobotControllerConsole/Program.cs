@@ -15,7 +15,7 @@ namespace RobotControllerConsole
             
             var r = new Robot();
             Thread.Sleep(1000);
-            r.LeftArm.ShoulderOut.TargetAngle = 40;
+            r.LeftArm.ShoulderOut.TargetAngle = 90;
             Console.ReadLine();
 
             r.Disconnect();
