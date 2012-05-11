@@ -20,17 +20,19 @@ namespace RobotControllerLib
             // Get the starting and ending position on the tachometer
             motor.Poll();
             var initTacho = motor.TachoCount.Value;
-            var endTacho = (uint)(initTacho + (powerPositive ? degrees : -degrees));
+            var endTacho = initTacho + (powerPositive ? degrees : -degrees);
 
-            Console.WriteLine(degrees);
-            Thread.Sleep(500);
+            Console.WriteLine("Degrees: {0}", degrees);
+            Console.WriteLine("Poll Interval: {0}", motor.PollInterval);
+            Thread.Sleep(2000);
 
             // Run motor and keep running motor at power
             motor.Run(power, 0);
 
             // We stop the motor running 30 degrees before the endpoint as the motor keeps running after that time.
             while ((powerPositive && (motor.TachoCount + 30 < endTacho) || (!powerPositive && (motor.TachoCount - 30 > endTacho)))) {
-                //Console.WriteLine(motor.TachoCount - initTacho);
+                //motor.Poll();
+                Console.WriteLine("Current: {0}, End: {1}", motor.TachoCount, endTacho);
                 Thread.Sleep(motor.PollInterval);
             }
 
