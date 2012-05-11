@@ -9,32 +9,31 @@ namespace RobotControllerLib
         public int[] ComPorts { get; private set; }
         public Dictionary<string, Tuple<int, NxtMotorPort?>> JointMotorMapping { get; private set; }
 
-        // Save this here for regexing to produce code : lShTw, lShEx, lElTw, lElEx, rShTw, rShEx, rElTw, rElEx,
-        public JointMotorConfig(int comPort1 = -1, int comPort2 = -1, int comPort3 = -1,
-                                int lShTwBrick = -1, NxtMotorPort? lShTwPort = null,
-                                int lShExBrick = -1, NxtMotorPort? lShExPort = null,
-                                int lElTwBrick = -1, NxtMotorPort? lElTwPort = null,
-                                int lElExBrick = -1, NxtMotorPort? lElExPort = null,
-                                int rShTwBrick = -1, NxtMotorPort? rShTwPort = null,
-                                int rShExBrick = -1, NxtMotorPort? rShExPort = null,
-                                int rElTwBrick = -1, NxtMotorPort? rElTwPort = null,
-                                int rElExBrick = -1, NxtMotorPort? rElExPort = null)
+        public MotorPort LeftShoulderAlong { get; set; }
+        public MotorPort LeftShoulderOut { get; set; }
+        public MotorPort LeftElbowAlong { get; set; }
+        public MotorPort LeftElbowOut { get; set; }
+        public MotorPort RightShoulderAlong { get; set; }
+        public MotorPort RightShoulderOut { get; set; }
+        public MotorPort RightElbowAlong { get; set; }
+        public MotorPort RightElbowOut { get; set; }
 
+        public JointMotorConfig(int comPort1, int comPort2, int comPort3)
         {
-            ComPorts = new[] { comPort1, comPort2, comPort3 };
-            JointMotorMapping = new Dictionary<string, Tuple<int, NxtMotorPort?>>
-            {
-                { "lShTw", Tuple.Create(lShTwBrick, lShTwPort) },
-                { "lShEx", Tuple.Create(lShExBrick, lShExPort) },
-                { "lElTw", Tuple.Create(lElTwBrick, lElTwPort) },
-                { "lElEx", Tuple.Create(lElExBrick, lElExPort) },
-                { "rShTw", Tuple.Create(rShTwBrick, rShTwPort) },
-                { "rShEx", Tuple.Create(rShExBrick, rShExPort) },
-                { "rElTw", Tuple.Create(rElTwBrick, rElTwPort) },
-                { "rElEx", Tuple.Create(rElExBrick, rElExPort) }
-            };
+            ComPorts = new[] {comPort1, comPort2, comPort3};
         }
 
-        public static JointMotorConfig Default = new JointMotorConfig(3, lShTwBrick: 0, lShTwPort: NxtMotorPort.PortA, lShExBrick: 0, lShExPort: NxtMotorPort.PortB);
+        public static JointMotorConfig Default = new JointMotorConfig(3, 9, 11)
+        {
+            LeftShoulderAlong =  new MotorPort(NxtMotorPort.PortB, 0),
+            LeftShoulderOut =    new MotorPort(NxtMotorPort.PortB, 1),
+            LeftElbowAlong =     new MotorPort(NxtMotorPort.PortC, 1),
+            LeftElbowOut =       new MotorPort(NxtMotorPort.PortC, 2),
+
+            RightShoulderAlong = new MotorPort(NxtMotorPort.PortC, 0),
+            RightShoulderOut =   new MotorPort(NxtMotorPort.PortB, 2),
+            RightElbowAlong =    new MotorPort(NxtMotorPort.PortA, 2),
+            RightElbowOut =      new MotorPort(NxtMotorPort.PortA, 1),
+        };
     }
 }

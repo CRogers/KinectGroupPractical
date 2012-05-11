@@ -4,18 +4,18 @@ namespace RobotControllerLib
 {
     public class Arm
     {
-        public Joint ShoulderTwist { get; private set; }
-        public Joint ShoulderExtend { get; private set; }
+        public Joint ShoulderAlong { get; private set; }
+        public Joint ShoulderOut { get; private set; }
 
-        public Joint ElbowTwist { get; private set; }
-        public Joint ElbowExtend { get; private set; }
+        public Joint ElbowAlong { get; private set; }
+        public Joint ElbowOut { get; private set; }
 
-        public Arm(NxtMotor shoulderTwistMotor, NxtMotor shoulderExtendMotor, NxtMotor elbowTwistMotor, NxtMotor elbowExtendMotor)
+        public Arm(NxtMotor shoulderAlong, NxtMotor shoulderOut, NxtMotor elbowAlong, NxtMotor elbowOut)
         {
-            ShoulderTwist = new Joint(shoulderTwistMotor);
-            ShoulderExtend = new Joint(shoulderExtendMotor);
-            ElbowTwist = new Joint(elbowTwistMotor);
-            ElbowExtend = new Joint(elbowExtendMotor);
+            ShoulderAlong = new Joint(shoulderAlong);
+            ShoulderOut = new Joint(shoulderOut);
+            ElbowAlong = new Joint(elbowAlong);
+            ElbowOut = new Joint(elbowOut);
         }
     }
 }

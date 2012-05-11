@@ -107,6 +107,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Restrictor\Restrictor.csproj">
+      <Project>{9FA00B45-3F6B-475E-A44A-9D65B5BC81E1}</Project>
+      <Name>Restrictor</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RobotControllerLib\RobotControllerLib.csproj">
       <Project>{21D11E0D-B0A2-45F5-8FBA-319CEC6FC077}</Project>
       <Name>RobotControllerLib</Name>

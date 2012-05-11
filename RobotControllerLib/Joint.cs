@@ -56,6 +56,11 @@ namespace RobotControllerLib
             DegreeScaleFactor = 1;
         }
 
+        public void Halt()
+        {
+            Motor.Brake();
+            Active = false;
+        }
 
         protected void StartUpdateThread()
         {
@@ -81,7 +86,7 @@ namespace RobotControllerLib
                     Motor.RunUntil(power, (uint) diff);
                 }
                 else {
-                    Thread.Sleep(50);
+                    Thread.Sleep(500);
                 }
             }
         }

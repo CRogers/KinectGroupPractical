@@ -12,7 +12,15 @@ namespace RobotControllerConsole
     {
         static void Main(string[] args)
         {
-            var brick = new NxtBrick(NxtCommLinkType.Bluetooth, 3);
+            
+            var r = new Robot();
+            Thread.Sleep(1000);
+            r.LeftArm.ShoulderOut.TargetAngle = 40;
+            Console.ReadLine();
+
+            r.Disconnect();
+
+            /*var brick = new NxtBrick(NxtCommLinkType.Bluetooth, 3);
 
             var motorA = new NxtMotor();
             brick.MotorA = motorA;
@@ -37,10 +45,6 @@ namespace RobotControllerConsole
             motorC.ResetMotorPosition(false);
             motorC.PollInterval = 5;
             motorC.Poll();
-
-            /*Joint a = new Joint(motorA);
-            a.TargetAngle = 30;
-            a.Power = 5;*/
 
             Joint b = new Joint(motorB);
             b.TargetAngle = 30;
