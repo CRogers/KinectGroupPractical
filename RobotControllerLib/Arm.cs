@@ -12,8 +12,8 @@ namespace RobotControllerLib
 
         public Arm(NxtMotor shoulderAlong, NxtMotor shoulderOut, NxtMotor elbowAlong, NxtMotor elbowOut)
         {
-            ShoulderAlong = new Joint(shoulderAlong);
-            ShoulderOut = new Joint(shoulderOut);
+            ShoulderAlong = new Joint(shoulderAlong) {DegreeScaleFactor = 24};
+            ShoulderOut = new Joint(shoulderOut) {DegreeScaleFactor = 24};
             ElbowAlong = new Joint(elbowAlong);
             ElbowOut = new Joint(elbowOut);
         }
