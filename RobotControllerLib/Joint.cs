@@ -73,9 +73,6 @@ namespace RobotControllerLib
 
         protected void UpdateContinuous()
         {
-            bool onRun = false;
-            sbyte runPower = 0;
-
             while(Active) {
                 // Convert the tachoCount (degrees moved by the motor) to absolute degrees
                 // TODO: What happens if the joint goes backwards and this becomes negative?
@@ -88,10 +85,6 @@ namespace RobotControllerLib
                 var rawDiff = Math.Abs(TargetAngle - CurrentAngle);
                 var diff = (uint)(rawDiff * DegreeScaleFactor);
 
-                /*bool goneTooFar = runPower >= 0 ? (CurrentAngle > TargetAngle) : (CurrentAngle < TargetAngle);
-                if (runPower == 0)
-                    goneTooFar = false;*/
-
                 if(rawDiff > 5) {
                     Motor.Run(power,diff);
                     Thread.Sleep(100);
@@ -102,25 +95,6 @@ namespace RobotControllerLib
 
                 if (TargetAngle != 0)
                     Console.WriteLine("Curr ang: {0}, Target: {1}, Diff: {2}, RawDiff: {3}, Power: {4}", CurrentAngle, TargetAngle, diff, rawDiff, power);
-
-                /*if(goneTooFar || rawDiff < 5)
-
-                if (!onRun) {
-                    if (!goneTooFar && rawDiff > 5) {
-                        //Motor.RunUntil(power, (uint) diff);
-                        Motor.Run(power, diff);
-                        onRun = true;
-                        runPower = power;
-                    }
-                    else {
-                        Motor.Brake();
-                        Thread.Sleep(100);
-                        onRun = false;
-                    }
-                }
-                else {
-                    Thread.Sleep(100);
-                }*/
             }
         }
     }
