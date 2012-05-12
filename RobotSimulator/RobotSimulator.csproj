@@ -60,6 +60,7 @@
     <Compile Include="Model\PositionCalculator.cs" />
     <Compile Include="Model\I_MotorListener.cs" />
     <Compile Include="Model\MotorManager.cs" />
+    <Compile Include="Portable.cs" />
     <Compile Include="Utility\MoreMaths.cs" />
     <Compile Include="Utility\I_KeyListener.cs" />
     <Compile Include="Views\ViewPlatform.cs" />
