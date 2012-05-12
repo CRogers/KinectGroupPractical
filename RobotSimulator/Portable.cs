@@ -18,11 +18,11 @@ namespace RobotSimulator
      */
     class Portable : I_MotorListener
     {
+
         private MotorManager motorManager;
         private PositionCalculator positionCalculator;
         private ViewPlatform platform;
         private Robot robot;
-        //Constants for specifying the direction the motor should move in.
         public const bool INCREASING = true, DECREASING = false;
         /// <summary>
         /// Create a new Portable object. This class is designed specifically to be imported by other solutions. By calling this constructor,
@@ -89,6 +89,53 @@ namespace RobotSimulator
         public PositionCalculator positions()
         {
             return positionCalculator;
+        }
+
+        //Constants for specifing different components:
+        public const byte LEFTHAND = 0, LEFTARMJOIN = 1, LEFTLOWERARM = 2, LEFTUPPERARM = 3;
+        public const byte RIGHTHAND = 4, RIGHTARMJOIN = 5, RIGHTLOWERARM = 6, RIGHTUPPERARM = 7;
+        public const byte HEAD = 8, NECK = 9, CHEST = 10, BASE = 11;
+        //For specifying the specific dimension of the piece:
+        //(depth z axis, height y axis, width x axis).
+        //To work out which direction is which, consider the robot in the standing position.
+        public const byte WIDTH = 0, HEIGHT = 1, DEPTH = 2;
+
+        /// <summary>
+        /// This method can tell you the dimensions of any of the robot's body parts.
+        /// These dimensions correspond to the robot in the standing position. For example, the width of the arm
+        /// is the horizontal length of it when the robot is standing still (in the x direction).
+        /// </summary>
+        /// <param name="bodypart">Which part of the robot you are interested. (Use Portable's constants)</param>
+        /// <param name="axis">Which axis you are interested in. (Use Portable's constants)</param>
+        /// <returns>The length of the specified part+direction</returns>
+        public double getSize(byte bodypart, byte axis)
+        {
+            Robot.Cuboid cuboid;
+            switch (bodypart)
+            {
+                //Check every case...
+                case LEFTHAND: cuboid = robot.LeftHand; break;
+                case LEFTARMJOIN: cuboid = robot.LeftArmJoin; break;
+                case LEFTLOWERARM: cuboid = robot.LeftLowerArm; break;
+                case LEFTUPPERARM: cuboid = robot.LeftUpperArm; break;
+                case RIGHTHAND: cuboid = robot.RightHand; break;
+                case RIGHTARMJOIN: cuboid = robot.RightArmJoin; break;
+                case RIGHTLOWERARM: cuboid = robot.RightLowerArm; break;
+                case RIGHTUPPERARM: cuboid = robot.RightUpperArm; break;
+                case HEAD: cuboid = robot.Head; break;
+                case NECK: cuboid = robot.Neck; break;
+                case BASE: cuboid = robot.Base; break;
+                case CHEST: cuboid = robot.Chest; break;
+                default: throw new ArgumentException("Unrecognised body part with number: " + bodypart.ToString());
+            }
+            switch (axis)
+            {
+                //Return the correct length
+                case WIDTH: return cuboid.XLength;
+                case HEIGHT: return cuboid.YLength;
+                case DEPTH: return cuboid.ZLength;
+                default: throw new ArgumentException("Unrecognised desired axis with number: " + axis.ToString());
+            }
         }
 
         /// <summary>
