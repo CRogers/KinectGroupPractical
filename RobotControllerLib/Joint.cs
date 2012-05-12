@@ -8,10 +8,19 @@ namespace RobotControllerLib
     {
         private int initialTacho;
 
-        public int TargetAngle { get; set; }
+        private int _targetAngle;
+        public int TargetAngle
+        {
+            get { return _targetAngle; }
+            set { _targetAngle = Clamp(MinAngle, MaxAngle, value); }
+        }
+
         public int CurrentAngle { get; private set; }
         public NxtMotor Motor { get; set; }
         public int DegreeScaleFactor { get; set; }
+
+        public int? MinAngle { get; set; }
+        public int? MaxAngle { get; set; }
 
         private bool _active = false;
         public bool Active
@@ -39,6 +48,18 @@ namespace RobotControllerLib
         }
 
 
+        private int Clamp(int? min, int? max, int value)
+        {
+            if (min != null)
+                value = Math.Max(min.Value, value);
+            if (max != null)
+                value = Math.Min(max.Value, value);
+
+            return value;
+        }
+
+
+
         public Joint(NxtMotor motor)
         {
             if (motor != null) {
@@ -56,6 +77,9 @@ namespace RobotControllerLib
             }
 
             DegreeScaleFactor = 1;
+
+            MinAngle = null;
+            MaxAngle = null;
         }
 
         public void Halt()

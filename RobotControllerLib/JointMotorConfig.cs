@@ -26,7 +26,7 @@ namespace RobotControllerLib
         }
 
         // Bluetooth: 3, 9, 11. USB: -, 1, -
-        public static JointMotorConfig Default = new JointMotorConfig(-1, NxtCommLinkType.Bluetooth, 1, NxtCommLinkType.USB, -1, NxtCommLinkType.Bluetooth)
+        public static JointMotorConfig Default = new JointMotorConfig(-1, NxtCommLinkType.Bluetooth, 2, NxtCommLinkType.USB, -1, NxtCommLinkType.Bluetooth)
         {
             LeftShoulderAlong =  new MotorPort(NxtMotorPort.PortB, 0),
             LeftShoulderOut =    new MotorPort(NxtMotorPort.PortB, 1),

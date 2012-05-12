@@ -14,7 +14,7 @@ namespace RobotControllerLib
         {
             ShoulderAlong = new Joint(shoulderAlong) {DegreeScaleFactor = 24};
             ShoulderOut = new Joint(shoulderOut) {DegreeScaleFactor = 24};
-            ElbowAlong = new Joint(elbowAlong) {Power = 10};
+            ElbowAlong = new Joint(elbowAlong) {Power = 10, MinAngle = 0, MaxAngle = 115};
             ElbowOut = new Joint(elbowOut) {Power = 10};
         }
     }

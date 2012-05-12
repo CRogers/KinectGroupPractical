@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RobotControllerConsole", "R
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restrictor", "Restrictor\Restrictor.csproj", "{9FA00B45-3F6B-475E-A44A-9D65B5BC81E1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinUsbWrapper", "Lib\NKH_MindSqualls_v2_2\NKH.MindSqualls\WinUsbWrapper\WinUsbWrapper.csproj", "{40C6E946-D5AC-43B8-AEDE-D896E9CBB3E2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,11 +75,22 @@ Global
 		{9FA00B45-3F6B-475E-A44A-9D65B5BC81E1}.Release|Mixed Platforms.Build.0 = Release|x86
 		{9FA00B45-3F6B-475E-A44A-9D65B5BC81E1}.Release|x86.ActiveCfg = Release|x86
 		{9FA00B45-3F6B-475E-A44A-9D65B5BC81E1}.Release|x86.Build.0 = Release|x86
+		{40C6E946-D5AC-43B8-AEDE-D896E9CBB3E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40C6E946-D5AC-43B8-AEDE-D896E9CBB3E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40C6E946-D5AC-43B8-AEDE-D896E9CBB3E2}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{40C6E946-D5AC-43B8-AEDE-D896E9CBB3E2}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{40C6E946-D5AC-43B8-AEDE-D896E9CBB3E2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{40C6E946-D5AC-43B8-AEDE-D896E9CBB3E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40C6E946-D5AC-43B8-AEDE-D896E9CBB3E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40C6E946-D5AC-43B8-AEDE-D896E9CBB3E2}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{40C6E946-D5AC-43B8-AEDE-D896E9CBB3E2}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{40C6E946-D5AC-43B8-AEDE-D896E9CBB3E2}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{9973018E-FC09-4549-A484-0B702ADE1EE9} = {7F229840-C736-4B73-BB7A-B3F6DF254C64}
+		{40C6E946-D5AC-43B8-AEDE-D896E9CBB3E2} = {7F229840-C736-4B73-BB7A-B3F6DF254C64}
 	EndGlobalSection
 EndGlobal
