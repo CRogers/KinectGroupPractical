@@ -96,8 +96,8 @@ namespace RobotSimulator
             var parameters = new TransformSmoothParameters
             {
                 Smoothing = 0.5f,
-                Correction = 0.0f,
-                Prediction = 0.0f,
+                Correction = 0.5f,
+                Prediction = 0.5f,
                 JitterRadius = 0.0f,
                 MaxDeviationRadius = 0.5f
 
