@@ -6,7 +6,7 @@ using System.Windows.Media.Media3D;
 
 namespace RobotSimulator.Utility
 {
-    public class MoreMaths
+    public static class MoreMaths
     {
         //For converting angles:
         public static double DegToRad(double angle)
@@ -81,5 +81,10 @@ namespace RobotSimulator.Utility
         {
             return project(p1, p, add(p, cross(sub(p1, p2), sub(p3, p1))));
         }
+        public static Point3D toPoint(this Vector3D v)
+        {
+            return new Point3D(v.X, v.Y, v.Z);
+        }
+
     }
 }
