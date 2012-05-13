@@ -38,8 +38,8 @@ namespace RobotSimulator.Model
      * can only be modified through the motor manager. The matrices used here are somewhat separate therefore to the transformation
      * groups used by the robot, so you must be careful to update both when the robot changes. The matrices and the transformation
      * graph are constructed side by side in the Robot class, so it shouldn't be difficult.
-     */ 
-    class PositionCalculator
+     */
+    public class PositionCalculator
     {
         Robot robot;
         MotorManager motorManager;
@@ -74,12 +74,12 @@ namespace RobotSimulator.Model
         //NECKMOTOR -> neck -> CHESTMOTOR -> chest -> base -> DONE
         public Point3D getNeckCoords(double? neckMotorAngle, double? chestMotorAngle, Point3D point)
         {
-            if (neckMotorAngle==null)
+            if (neckMotorAngle == null)
             {
                 neckMotorAngle = MoreMaths.fromMotorAngle(motorManager.getMotorDegrees(MotorManager.NECK_MOTOR1));
             }
             Matrix3D neckRot = Transforms.makeAxisTransform(robot.neckMotorAxis(), robot.neckAdjust(neckMotorAngle.GetValueOrDefault())).Value;
-            return getChestCoords(chestMotorAngle,neckRot.Transform(robot.neckTransform.Transform(point)));
+            return getChestCoords(chestMotorAngle, neckRot.Transform(robot.neckTransform.Transform(point)));
         }
 
         //Return the coordinates of the centre of the head - (0,0,0) for centre
@@ -93,7 +93,7 @@ namespace RobotSimulator.Model
         //leftArmJoin -> CHESTMOTOR -> chest -> base -> DONE
         public Point3D getLeftArmJoinCoords(double? chestMotorAngle, Point3D point)
         {
-            return getChestCoords(chestMotorAngle,robot.leftArmJoinTransform.Transform(point));
+            return getChestCoords(chestMotorAngle, robot.leftArmJoinTransform.Transform(point));
             //return chestRot.Transform(robot.leftArmJoinTransform.Transform(point));
         }
 
@@ -109,7 +109,7 @@ namespace RobotSimulator.Model
         //The function itself:
         private Point3D getLeftShoulderCentreCoords(double? chestMotorAngle, Point3D point)
         {
-            return getLeftArmJoinCoords(chestMotorAngle,robot.leftShoulderTransform.Transform(point));
+            return getLeftArmJoinCoords(chestMotorAngle, robot.leftShoulderTransform.Transform(point));
         }
 
         //Return the coordinates of the centre of the left upper arm - (0,0,0) for centre
@@ -137,14 +137,14 @@ namespace RobotSimulator.Model
         public Point3D getLeftElbowCentreCoords(double? leftShoulderMotorAngle1,
             double? leftShoulderMotorAngle2, double? chestMotorAngle)
         {
-            return getLeftElbowCentreCoords(leftShoulderMotorAngle1, leftShoulderMotorAngle2, chestMotorAngle, new Point3D(0,0,0));
+            return getLeftElbowCentreCoords(leftShoulderMotorAngle1, leftShoulderMotorAngle2, chestMotorAngle, new Point3D(0, 0, 0));
         }
 
         //The actual function:
-        private Point3D getLeftElbowCentreCoords(double? leftShoulderMotorAngle1,
+        public Point3D getLeftElbowCentreCoords(double? leftShoulderMotorAngle1,
             double? leftShoulderMotorAngle2, double? chestMotorAngle, Point3D point)
         {
-            return getLeftUpperArmCoords(leftShoulderMotorAngle1,leftShoulderMotorAngle2,chestMotorAngle,robot.leftElbowTransform.Transform(point));
+            return getLeftUpperArmCoords(leftShoulderMotorAngle1, leftShoulderMotorAngle2, chestMotorAngle, robot.leftElbowTransform.Transform(point));
         }
 
         //Return the coordinates of the centre of the left lower arm - (0,0,0) for centre
@@ -163,8 +163,8 @@ namespace RobotSimulator.Model
             {
                 leftElbowMotorAngle2 = MoreMaths.fromMotorAngle(motorManager.getMotorDegrees(MotorManager.LEFT_ELBOW_MOTOR2));
             }
-            Matrix3D leftElbowRot1 = Transforms.makeAxisTransform(robot.leftElbowMotor1Axis(), robot.leftElbow1Adjust(leftElbowMotorAngle1.GetValueOrDefault())).Value;
-            Matrix3D leftElbowRot2 = Transforms.makeAxisTransform(robot.leftElbowMotor2Axis(leftElbowMotorAngle1.GetValueOrDefault()), robot.leftElbow2Adjust(leftElbowMotorAngle2.GetValueOrDefault())).Value;
+            Matrix3D leftElbowRot1 = Transforms.makeAxisTransform(robot.leftElbowMotor2Axis(), robot.leftElbow2Adjust(leftElbowMotorAngle2.GetValueOrDefault())).Value;
+            Matrix3D leftElbowRot2 = Transforms.makeAxisTransform(robot.leftElbowMotor1Axis(leftElbowMotorAngle2.GetValueOrDefault()), robot.leftElbow1Adjust(leftElbowMotorAngle1.GetValueOrDefault())).Value;
             return getLeftElbowCentreCoords(leftShoulderMotorAngle1, leftShoulderMotorAngle2, chestMotorAngle,
                 leftElbowRot2.Transform(leftElbowRot1.Transform(robot.leftLowerArmTransform.Transform(point))));
         }
@@ -179,7 +179,7 @@ namespace RobotSimulator.Model
         {
             return getLeftLowerArmCoords(leftElbowMotorAngle1,
             leftElbowMotorAngle2, leftShoulderMotorAngle1,
-            leftShoulderMotorAngle2, chestMotorAngle,robot.leftHandTransform.Transform(point));
+            leftShoulderMotorAngle2, chestMotorAngle, robot.leftHandTransform.Transform(point));
         }
 
         //****************************************** other arm ***************************************
@@ -234,7 +234,7 @@ namespace RobotSimulator.Model
         }
 
         //The actual function:
-        private Point3D getRightElbowCentreCoords(double? rightShoulderMotorAngle1,
+        public Point3D getRightElbowCentreCoords(double? rightShoulderMotorAngle1,
             double? rightShoulderMotorAngle2, double? chestMotorAngle, Point3D point)
         {
             return getRightUpperArmCoords(rightShoulderMotorAngle1, rightShoulderMotorAngle2, chestMotorAngle, robot.rightElbowTransform.Transform(point));
@@ -256,8 +256,8 @@ namespace RobotSimulator.Model
             {
                 rightElbowMotorAngle2 = MoreMaths.fromMotorAngle(motorManager.getMotorDegrees(MotorManager.RIGHT_ELBOW_MOTOR2));
             }
-            Matrix3D rightElbowRot1 = Transforms.makeAxisTransform(robot.rightElbowMotor1Axis(), robot.rightElbow1Adjust(rightElbowMotorAngle1.GetValueOrDefault())).Value;
-            Matrix3D rightElbowRot2 = Transforms.makeAxisTransform(robot.rightElbowMotor2Axis(rightElbowMotorAngle1.GetValueOrDefault()), robot.rightElbow2Adjust(rightElbowMotorAngle2.GetValueOrDefault())).Value;
+            Matrix3D rightElbowRot1 = Transforms.makeAxisTransform(robot.rightElbowMotor2Axis(), robot.rightElbow2Adjust(rightElbowMotorAngle2.GetValueOrDefault())).Value;
+            Matrix3D rightElbowRot2 = Transforms.makeAxisTransform(robot.rightElbowMotor1Axis(rightElbowMotorAngle2.GetValueOrDefault()), robot.rightElbow1Adjust(rightElbowMotorAngle1.GetValueOrDefault())).Value;
             return getRightElbowCentreCoords(rightShoulderMotorAngle1, rightShoulderMotorAngle2, chestMotorAngle,
                 rightElbowRot2.Transform(rightElbowRot1.Transform(robot.rightLowerArmTransform.Transform(point))));
         }
@@ -266,7 +266,7 @@ namespace RobotSimulator.Model
         //rightHand -> rightLowerArm -> RIGHTELBOWMOTOR1 -> RIGHTELBOWMOTOR2 -> rightElbow -> rightUpperArm ->
         //RIGHTUPPERMOTOR1 -> RIGHTUPPERMOTOR2 -> rightArmJoin ->
         //CHESTMOTOR -> chest -> base -> DONE
-        public Point3D getRightHandCoords(double? rightElbowMotorAngle1,
+        public Point3D getRightHandCentreCoords(double? rightElbowMotorAngle1,
             double? rightElbowMotorAngle2, double? rightShoulderMotorAngle1,
             double? rightShoulderMotorAngle2, double? chestMotorAngle, Point3D point)
         {
