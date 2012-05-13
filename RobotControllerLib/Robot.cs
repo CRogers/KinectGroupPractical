@@ -28,7 +28,7 @@ namespace RobotControllerLib
 
             for (int i = 0; i < jmc.ComPorts.Length; i++) {
                 var comPort = jmc.ComPorts[i];
-                if (comPort != -1) {
+                if (comPort >= 0) {
                     int j = i; // Prevent access to modified closure
                     connectTasks[i] = new Task<NxtBrick>(() => ConnectBrick(j, jmc.LinkTypes[j], comPort));
                     connectTasks[i].Start();
