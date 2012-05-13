@@ -74,8 +74,41 @@ namespace RobotSimulator.Model
             lSquared = -Math.Sqrt(lSquared);
             for (int x = 0; x < 8; x++)
                 fds[x] = prevAngles[x] + fds[x] * INCREMENT / lSquared;
-            if (computeError(fds, target) <= computeError(prevAngles, target))
+            double[] perturbation = perturb(target, prevAngles);
+            double pError = computeError(perturbation, target);
+            double fdError = computeError(fds, target);
+            double prevError = computeError(prevAngles, target);
+            if (fdError <= prevError && fdError <= pError)
                 CollisionRestrictor.INSTANCE.commitAngles(convert(fds));
+            else if (pError <= prevError)
+                CollisionRestrictor.INSTANCE.commitAngles(convert(perturbation));
+        }
+        private static Random random=new Random();
+        private double[] perturb(Point3D[] target, double[] angles)
+        {
+            double[] minPerturbation = angles;
+            double[] perturbation = new double[8];
+            double minError = Double.MaxValue;
+            for (int x = 0; x < 100; x++)
+            {
+                for (int y = 0; y < 8; y++)
+                    perturbation[y] = random.NextDouble() - .5;
+                double lSquared = 0;
+                for (int y = 0; y < 8; y++)
+                    lSquared += perturbation[y] * perturbation[y];
+                if (lSquared == 0)
+                    continue;
+                lSquared = Math.Sqrt(lSquared);
+                for (int y = 0; y < 8; y++)
+                    perturbation[y] = angles[y] + perturbation[y] * (EPSILON / lSquared);
+                double error = computeError(perturbation, target);
+                if (error < minError)
+                {
+                    minError = error;
+                    minPerturbation = perturbation;
+                }
+            }
+            return minPerturbation;
         }
         private double finiteDifference(double[] angles, int index, Point3D[] target)
         {
