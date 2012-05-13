@@ -174,7 +174,7 @@ namespace RobotSimulator
 
 
                 // a counter introduced to slow the frame rate effectively         
-                if (counter >= 10)
+                if (counter >= 1)
                 {
                     //load the new skeleton into the angleCalculator
                     angleCalculator.updateSkeleton(first);
