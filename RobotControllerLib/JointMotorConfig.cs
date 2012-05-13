@@ -25,18 +25,20 @@ namespace RobotControllerLib
             LinkTypes = new[] {link1, link2, link3};
         }
 
-        // Bluetooth: 3, 9, 11. USB: -, 1, -
-        public static JointMotorConfig Default = new JointMotorConfig(-1, NxtCommLinkType.Bluetooth, 2, NxtCommLinkType.USB, -1, NxtCommLinkType.Bluetooth)
+        // Bluetooth: 3, 9, 11. USB: 2, 4, 3
+        public static JointMotorConfig Default = new JointMotorConfig(2, NxtCommLinkType.USB, 4, NxtCommLinkType.USB, 3, NxtCommLinkType.USB)
         {
-            LeftShoulderAlong =  new MotorPort(NxtMotorPort.PortB, 0),
-            LeftShoulderOut =    new MotorPort(NxtMotorPort.PortB, 1),
-            LeftElbowAlong =     new MotorPort(NxtMotorPort.PortC, 1),
-            LeftElbowOut =       new MotorPort(NxtMotorPort.PortC, 2),
+            RightElbowAlong    = new MotorPort(NxtMotorPort.PortA, 0),
+            LeftShoulderOut    = new MotorPort(NxtMotorPort.PortB, 0),
+            LeftElbowAlong     = new MotorPort(NxtMotorPort.PortC, 0),
 
-            RightShoulderAlong = new MotorPort(NxtMotorPort.PortC, 0),
-            RightShoulderOut =   new MotorPort(NxtMotorPort.PortB, 2),
-            RightElbowAlong =    new MotorPort(NxtMotorPort.PortA, 1),
-            RightElbowOut =      new MotorPort(NxtMotorPort.PortA, 2),
+            LeftShoulderAlong  = new MotorPort(NxtMotorPort.PortB, 1),
+            RightShoulderAlong = new MotorPort(NxtMotorPort.PortC, 1),
+
+            RightElbowOut      = new MotorPort(NxtMotorPort.PortA, 2),
+            RightShoulderOut   = new MotorPort(NxtMotorPort.PortB, 2),  
+            LeftElbowOut       = new MotorPort(NxtMotorPort.PortC, 2),          
+            
         };
     }
 }
