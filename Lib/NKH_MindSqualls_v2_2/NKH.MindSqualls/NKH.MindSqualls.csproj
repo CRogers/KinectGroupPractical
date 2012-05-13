@@ -35,6 +35,9 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WinUsbWrapper">
+      <HintPath>..\WinUsbWrapper.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HiTechnicAccelerationSensor.cs" />
@@ -68,12 +71,6 @@
     <Compile Include="McNxtBrick.cs" />
     <Compile Include="McNxtMotor.cs" />
     <Compile Include="McNxtMotorSync.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="WinUsbWrapper\WinUsbWrapper.csproj">
-      <Project>{40C6E946-D5AC-43B8-AEDE-D896E9CBB3E2}</Project>
-      <Name>WinUsbWrapper</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

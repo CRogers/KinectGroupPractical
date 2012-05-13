@@ -11,7 +11,7 @@ namespace RobotSimulator.Model
     //This class can take requests to change the motors. The view listens to this class in order to work out what
     //it should do to display the motors.
     //The motors have angles specified from 0 to 255 degrees (corresponding to 0 to 360 degrees):
-    class MotorManager : I_Observable<I_MotorListener>
+    public class MotorManager : I_Observable<I_MotorListener>
     {
         //The listeners for the motor events:
         private ICollection<I_MotorListener> listeners;

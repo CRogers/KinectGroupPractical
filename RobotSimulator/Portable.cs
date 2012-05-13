@@ -7,6 +7,7 @@ using RobotSimulator.View;
 using RobotSimulator.Controller;
 using System.Windows.Controls;
 using RobotSimulator.Utility;
+using Restrictor;
 
 namespace RobotSimulator
 {
@@ -16,7 +17,7 @@ namespace RobotSimulator
      * manager and position calculator automatically.
      * You may optionally pass in a ViewPort3D if you wish for the robot to be displayed somewhere.
      */
-    class Portable : I_MotorListener
+    public class Portable : I_MotorListener
     {
 
         private MotorManager motorManager;
@@ -70,6 +71,42 @@ namespace RobotSimulator
         {
             if (keyHandler == null) throw new ArgumentException("Unexpected null key handler.");
             keyHandler.addListener(platform);
+        }
+
+        /// <summary>
+        /// Return the angle position object represented by the dummy robot's current position.
+        /// (So thid does the conversion for you)
+        /// </summary>
+        /// <returns>The angle positions object</returns>
+        public AnglePositions getAngles()
+        {
+            AnglePositions angles = new AnglePositions();
+            angles.LeftShoulderAlong = (int)getMotor(MotorManager.LEFT_SHOULDER_MOTOR1);
+            angles.LeftShoulderOut = (int)getMotor(MotorManager.LEFT_SHOULDER_MOTOR2);
+            angles.LeftElbowAlong = (int)getMotor(MotorManager.LEFT_ELBOW_MOTOR1);
+            angles.LeftElbowOut = (int)getMotor(MotorManager.LEFT_ELBOW_MOTOR2);
+            angles.RightShoulderAlong = (int)getMotor(MotorManager.RIGHT_SHOULDER_MOTOR1);
+            angles.RightShoulderOut = (int)getMotor(MotorManager.RIGHT_SHOULDER_MOTOR2);
+            angles.RightElbowAlong = (int)getMotor(MotorManager.RIGHT_ELBOW_MOTOR1);
+            angles.RightElbowOut = (int)getMotor(MotorManager.RIGHT_ELBOW_MOTOR2);
+            return angles;
+        }
+
+        /// <summary>
+        /// Set the angles of the robot using an AnglesPosition object instead
+        /// </summary>
+        /// <param name="angles">The angles object you wish to use (null values will be ignored)</param>
+        public void setAngles(AnglePositions angles)
+        {
+            if (angles.LeftShoulderAlong != null) setMotor(MotorManager.LEFT_SHOULDER_MOTOR1, angles.LeftShoulderAlong.Value);
+            if (angles.LeftShoulderOut != null) setMotor(MotorManager.LEFT_SHOULDER_MOTOR2, angles.LeftShoulderOut.Value);
+            if (angles.LeftElbowAlong != null) setMotor(MotorManager.LEFT_ELBOW_MOTOR1, angles.LeftElbowAlong.Value);
+            if (angles.LeftElbowOut != null) setMotor(MotorManager.LEFT_ELBOW_MOTOR2, angles.LeftElbowOut.Value);
+
+            if (angles.RightShoulderAlong != null) setMotor(MotorManager.RIGHT_SHOULDER_MOTOR1, angles.RightShoulderAlong.Value);
+            if (angles.RightShoulderOut != null) setMotor(MotorManager.RIGHT_SHOULDER_MOTOR2, angles.RightShoulderOut.Value);
+            if (angles.RightElbowAlong != null) setMotor(MotorManager.RIGHT_ELBOW_MOTOR1, angles.RightElbowAlong.Value);
+            if (angles.RightElbowOut != null) setMotor(MotorManager.RIGHT_ELBOW_MOTOR2, angles.RightElbowOut.Value);
         }
 
         /// <summary>
