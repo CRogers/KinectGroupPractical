@@ -36,6 +36,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Coding4Fun.Kinect.Wpf">
+      <HintPath>..\..\RobotSimulator\bin\Debug\Coding4Fun.Kinect.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="KinectTest">
+      <HintPath>..\..\RobotSimulator\bin\Debug\KinectTest.exe</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Kinect, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Samples.Kinect.WpfViewers">
+      <HintPath>..\..\..\..\..\Downloads\KinectforWindowsSDKV1\Dependencies\KinectWpfViewers\bin\Release\Microsoft.Samples.Kinect.WpfViewers.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -55,6 +65,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AngleCalculator.cs" />
+    <Compile Include="AngleSet.cs" />
     <Compile Include="Controller\KeyInputController.cs" />
     <Compile Include="Linker.cs" />
     <Compile Include="Model\PositionCalculator.cs" />
