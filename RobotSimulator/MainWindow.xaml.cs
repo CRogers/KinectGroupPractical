@@ -31,11 +31,11 @@ namespace RobotSimulator
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             //Initialise the display:
-            //new Linker(this,viewport);
+            new Linker(this,viewport);
             //An example of how you might use the Portable class
-            Portable p = new Portable(viewport);
-            p.setCameraToListenToKeys(this);
-            p.setMotor(MotorManager.LEFT_SHOULDER_MOTOR1, 90);
+            //Portable p = new Portable(viewport);
+            //p.setCameraToListenToKeys(this);
+            //p.setMotor(MotorManager.LEFT_SHOULDER_MOTOR1, 90);
         }
 
         private void viewport_KeyDown(object sender, KeyEventArgs e)

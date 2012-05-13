@@ -6,7 +6,7 @@ using System.Windows.Media.Media3D;
 
 namespace RobotSimulator.Model
 {
-    enum Axis : byte
+    public enum Axis : byte
     {
         X = 0,
         Y = 1,

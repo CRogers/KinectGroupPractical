@@ -15,28 +15,30 @@ namespace RobotSimulator.Model
      * The robot itself!
      * This has many parts...
      */
-    class Robot
+    public class Robot
     {
         //Build the robot!
         //IMPORTANT: a robot can only have one viewport.
         public void intialise(Viewport3D viewport)
         {
+            double armWidth = 8;
+            double lowerHeight = 9, upperHeight = 18, handHeight = 3;
             this.viewport = viewport;
             //The right arm:
-            this.RightHand.setLengths(10, 10, 10);
-            this.RightLowerArm.setLengths(10, 40, 10);
-            this.RightUpperArm.setLengths(10, 40, 10);
-            this.RightArmJoin.setLengths(10, 10, 10);
+            this.RightHand.setLengths(armWidth, handHeight, armWidth);
+            this.RightLowerArm.setLengths(armWidth, lowerHeight, armWidth);
+            this.RightUpperArm.setLengths(armWidth, upperHeight, armWidth);
+            this.RightArmJoin.setLengths(4, 4, armWidth);
             //The left arm:
-            this.LeftHand.setLengths(10, 10, 10);
-            this.LeftLowerArm.setLengths(10, 40, 10);
-            this.LeftUpperArm.setLengths(10, 40, 10);
-            this.LeftArmJoin.setLengths(10, 10, 10);
+            this.LeftHand.setLengths(armWidth, handHeight, armWidth);
+            this.LeftLowerArm.setLengths(armWidth, lowerHeight, armWidth);
+            this.LeftUpperArm.setLengths(armWidth, upperHeight, armWidth);
+            this.LeftArmJoin.setLengths(4, 4, armWidth);
             //The rest of the body:
-            this.Neck.setLengths(10, 10, 10);
-            this.Head.setLengths(20, 20, 10);
-            this.Chest.setLengths(40, 120, 10);
-            this.Base.setLengths(100, 20, 100);
+            this.Neck.setLengths(3, 3, 3);
+            this.Head.setLengths(6, 3, 5);
+            this.Chest.setLengths(12, 41, 10);
+            this.Base.setLengths(50, 3, 50);
             //Set all the motors to cause the robot to stand:
             //Default:
             this.NeckMotor1 = -neckMotorOffset1;
@@ -50,7 +52,7 @@ namespace RobotSimulator.Model
             this.RightShoulderMotor1 = -rightShoulderMotorOffset1;
             this.RightShoulderMotor2 = -rightShoulderMotorOffset2;
             //Scale everything by the specified amount:
-            scale = 1;
+            scale = 3;
             this.Head.scale(scale);
             this.LeftArmJoin.scale(scale);
             this.LeftHand.scale(scale);
@@ -186,7 +188,8 @@ namespace RobotSimulator.Model
         //For parameterisation's sake, these functions calculate the axis of rotation
         //to be used by each motor:
         //(When two motors are at the same joint, the second will need to know the first motor's angle)
-        protected internal Axis neckMotorAxis() {
+        protected internal Axis neckMotorAxis()
+        {
             return Axis.Y;
         }
         protected internal Axis chestMotorAxis()
@@ -201,13 +204,13 @@ namespace RobotSimulator.Model
         {
             return new Vector3D(0, -Math.Sin(MoreMaths.DegToRad(rightShoulder1Adjust(angle))), Math.Cos(MoreMaths.DegToRad(rightShoulder1Adjust(angle))));
         }
-        protected internal Axis rightElbowMotor1Axis()
+        protected internal Axis rightElbowMotor2Axis()
         {
-            return Axis.X;
+            return Axis.Z;
         }
-        protected internal Vector3D rightElbowMotor2Axis(double angle)
+        protected internal Vector3D rightElbowMotor1Axis(double angle)
         {
-            return new Vector3D(0, -Math.Sin(MoreMaths.DegToRad(rightElbow1Adjust(angle))), Math.Cos(MoreMaths.DegToRad(rightElbow1Adjust(angle))));
+            return new Vector3D(Math.Cos(MoreMaths.DegToRad(rightElbow2Adjust(angle))), Math.Sin(MoreMaths.DegToRad(rightElbow2Adjust(angle))), 0);
         }
         protected internal Axis leftShoulderMotor1Axis()
         {
@@ -217,13 +220,13 @@ namespace RobotSimulator.Model
         {
             return new Vector3D(0, -Math.Sin(MoreMaths.DegToRad(leftShoulder1Adjust(angle))), Math.Cos(MoreMaths.DegToRad(leftShoulder1Adjust(angle))));
         }
-        protected internal Axis leftElbowMotor1Axis()
+        protected internal Axis leftElbowMotor2Axis()
         {
-            return Axis.X;
+            return Axis.Z;
         }
-        protected internal Vector3D leftElbowMotor2Axis(double angle)
+        protected internal Vector3D leftElbowMotor1Axis(double angle)
         {
-            return new Vector3D(0, -Math.Sin(MoreMaths.DegToRad(leftElbow1Adjust(angle))), Math.Cos(MoreMaths.DegToRad(leftElbow1Adjust(angle))));
+            return new Vector3D(Math.Cos(MoreMaths.DegToRad(leftElbow2Adjust(angle))), Math.Sin(MoreMaths.DegToRad(leftElbow2Adjust(angle))), 0);
         }
         //For applying the offset and inversion factors to each motor...
         protected internal double neckAdjust(double angle)
@@ -338,10 +341,8 @@ namespace RobotSimulator.Model
         }
         private void rightElbowMoveMotor1(double val)
         {
-            rightElbowMotorTransform1.Rotation = Transforms.makeAxisTransform(rightElbowMotor1Axis(), rightElbow1Adjust(val)).Rotation;
+            rightElbowMotorTransform1.Rotation = Transforms.makeAxisTransform(rightElbowMotor1Axis(RightElbowMotor2), rightElbow1Adjust(val)).Rotation;
             rightElbowMotor1 = val;
-            //Update the other side too:
-            rightElbowMotorTransform2.Rotation = Transforms.makeAxisTransform(rightElbowMotor2Axis(RightElbowMotor1), rightElbow2Adjust(rightElbowMotor2)).Rotation;
         }
         private double rightElbowMotor2;
         public double RightElbowMotor2
@@ -359,8 +360,10 @@ namespace RobotSimulator.Model
         }
         private void rightElbowMoveMotor2(double val)
         {
-            rightElbowMotorTransform2.Rotation = Transforms.makeAxisTransform(rightElbowMotor2Axis(RightElbowMotor1), rightElbow2Adjust(val)).Rotation;
+            rightElbowMotorTransform2.Rotation = Transforms.makeAxisTransform(rightElbowMotor2Axis(), rightElbow2Adjust(val)).Rotation;
             rightElbowMotor2 = val;
+            //Update the other side too:
+            rightElbowMotorTransform1.Rotation = Transforms.makeAxisTransform(rightElbowMotor1Axis(RightElbowMotor2), rightElbow1Adjust(rightElbowMotor1)).Rotation;
         }
         private double leftShoulderMotor1;
         public double LeftShoulderMotor1
@@ -414,10 +417,8 @@ namespace RobotSimulator.Model
         }
         private void leftElbowMoveMotor1(double val)
         {
-            leftElbowMotorTransform1.Rotation = Transforms.makeAxisTransform(leftElbowMotor1Axis(), leftElbow1Adjust(val)).Rotation;
+            leftElbowMotorTransform1.Rotation = Transforms.makeAxisTransform(leftElbowMotor1Axis(LeftElbowMotor2), leftElbow1Adjust(val)).Rotation;
             leftElbowMotor1 = val;
-            //Update the other side too:
-            leftElbowMotorTransform2.Rotation = Transforms.makeAxisTransform(leftElbowMotor2Axis(LeftElbowMotor1), leftElbow2Adjust(leftElbowMotor2)).Rotation;
         }
         private double leftElbowMotor2;
         public double LeftElbowMotor2
@@ -435,8 +436,10 @@ namespace RobotSimulator.Model
         }
         private void leftElbowMoveMotor2(double val)
         {
-            leftElbowMotorTransform2.Rotation = Transforms.makeAxisTransform(leftElbowMotor2Axis(LeftElbowMotor1), leftElbow2Adjust(val)).Rotation;
+            leftElbowMotorTransform2.Rotation = Transforms.makeAxisTransform(leftElbowMotor2Axis(), leftElbow2Adjust(val)).Rotation;
             leftElbowMotor2 = val;
+            //Update the other side too:
+            leftElbowMotorTransform1.Rotation = Transforms.makeAxisTransform(leftElbowMotor1Axis(LeftElbowMotor2), leftElbow1Adjust(leftElbowMotor1)).Rotation;
         }
         private double chestMotor1;
         public double ChestMotor1
@@ -509,10 +512,10 @@ namespace RobotSimulator.Model
             trans = Transforms.makeTranslateTransform(0, -(LeftLowerArm.YLength / 2), 0);
             leftLowerArmTransform = trans.Value;
             leftLowerArmObj = Transforms.applyTransform(leftLowerArmObj, trans);
-            //Attach elbow motor1:
-            leftLowerArmObj = Transforms.applyTransform(leftLowerArmObj, leftElbowMotorTransform1);
             //Attach second elbow motor2:
             leftLowerArmObj = Transforms.applyTransform(leftLowerArmObj, leftElbowMotorTransform2);
+            //Attach elbow motor1:
+            leftLowerArmObj = Transforms.applyTransform(leftLowerArmObj, leftElbowMotorTransform1);
             //Again, translate the lower arm with the hand to be ready to fit onto the upper arm:
             trans = Transforms.makeTranslateTransform(0, -(LeftUpperArm.YLength / 2), 0);
             leftElbowTransform = trans.Value;
@@ -550,10 +553,10 @@ namespace RobotSimulator.Model
             trans = Transforms.makeTranslateTransform(0, -(RightLowerArm.YLength / 2), 0);
             rightLowerArmTransform = trans.Value;
             rightLowerArmObj = Transforms.applyTransform(rightLowerArmObj, trans);
-            //Attach elbow motor1:
-            rightLowerArmObj = Transforms.applyTransform(rightLowerArmObj, rightElbowMotorTransform1);
             //Attach second elbow motor2:
             rightLowerArmObj = Transforms.applyTransform(rightLowerArmObj, rightElbowMotorTransform2);
+            //Attach elbow motor1:
+            rightLowerArmObj = Transforms.applyTransform(rightLowerArmObj, rightElbowMotorTransform1);
             //Again, translate the lower arm with the hand to be ready to fit onto the upper arm:
             trans = Transforms.makeTranslateTransform(0, -(RightUpperArm.YLength / 2), 0);
             rightElbowTransform = trans.Value;
