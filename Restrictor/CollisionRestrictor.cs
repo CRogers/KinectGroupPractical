@@ -81,6 +81,7 @@ namespace Restrictor
         //Updates the robot's angles throught the alternative thread
         private void updateRealMotors()
         {
+            /*
             if (isRobotReady())
             {
                 realAngles.LeftElbowAlong = robot.LeftArm.ElbowAlong.CurrentAngle;
@@ -91,7 +92,7 @@ namespace Restrictor
                 realAngles.RightElbowOut = robot.RightArm.ElbowOut.CurrentAngle;
                 realAngles.RightShoulderAlong = robot.RightArm.ShoulderAlong.CurrentAngle;
                 realAngles.RightShoulderOut = robot.RightArm.ShoulderOut.CurrentAngle;
-            }
+            }*/
         }
 
         public Portable getKinectRobot()
@@ -118,11 +119,15 @@ namespace Restrictor
         //For sending in data from the Kinect
         public void kinectDataIn(AnglePositions angles)
         {
+            
             kinectRobot.setAngles(angles); //for display purposes
+            /*
             foreach (var listener in listeners)
             {
                 listener.kinectAngles(angles);
             }
+             * */
+            commitAngles(angles);
         }
 
         /// <summary>

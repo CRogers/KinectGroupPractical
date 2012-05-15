@@ -12,12 +12,13 @@ namespace RobotControllerConsole
     {
         static void Main(string[] args)
         {
+            Logger.ToStdout = true;
             
             var r = new Robot();
             Thread.Sleep(1000);
             r.LeftArm.ShoulderOut.TargetAngle = 90;
-            //r.RightArm.ElbowAlong.TargetAngle = 120;
-            //r.LeftArm.ElbowAlong.TargetAngle = 250;
+            //r.RightArm.ElbowAlong.TargetAngle = 90;
+            //r.RightArm.ShoulderAlong.TargetAngle = 90;
             Console.ReadLine();
 
             r.Disconnect();

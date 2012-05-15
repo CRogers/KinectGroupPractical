@@ -37,13 +37,15 @@ namespace RobotControllerLib
 
             Task.WaitAll(connectTasks.Where(a => a != null).ToArray());
 
+            Logger.Log("Connected all motors");
+
             for (int i = 0; i < connectTasks.Length; i++) {
                 nxtBricks[i] = connectTasks[i] == null ? null : connectTasks[i].Result;
             }
 
             // Add joints
-            LeftArm =  new Arm(AddMotorToNxt(jmc.LeftShoulderAlong), AddMotorToNxt(jmc.LeftShoulderOut), AddMotorToNxt(jmc.LeftElbowAlong), AddMotorToNxt(jmc.LeftElbowOut));
-            RightArm = new Arm(AddMotorToNxt(jmc.RightShoulderAlong), AddMotorToNxt(jmc.RightShoulderOut), AddMotorToNxt(jmc.RightElbowAlong), AddMotorToNxt(jmc.RightElbowOut));
+            LeftArm =  new Arm("Left", AddMotorToNxt(jmc.LeftShoulderAlong), AddMotorToNxt(jmc.LeftShoulderOut), AddMotorToNxt(jmc.LeftElbowAlong), AddMotorToNxt(jmc.LeftElbowOut));
+            RightArm = new Arm("Right", AddMotorToNxt(jmc.RightShoulderAlong), AddMotorToNxt(jmc.RightShoulderOut), AddMotorToNxt(jmc.RightElbowAlong), AddMotorToNxt(jmc.RightElbowOut));
         }
 
         private NxtBrick ConnectBrick(int brickNo, NxtCommLinkType linkType, int comPort)
@@ -53,11 +55,11 @@ namespace RobotControllerLib
             if (linkType == NxtCommLinkType.Bluetooth) {
                 var attempts = 3;
                 for (int attempt = 0; attempt < attempts; attempt++) {
-                    Console.WriteLine("Connecting to brick {0} on port {1}. \t\tAttempt {2} of {3}...", brickNo, comPort,
+                    Logger.Log("Connecting to brick {0} on port {1}. \t\tAttempt {2} of {3}...", brickNo, comPort,
                                       attempt + 1, attempts);
                     try {
                         brick.Connect();
-                        Console.WriteLine("\tBrick {0} successfully connected (port: {1})", brickNo, comPort);
+                        Logger.Log("\tBrick {0} successfully connected (port: {1})", brickNo, comPort);
                         break;
                     }
                     catch (IOException) {
@@ -66,6 +68,8 @@ namespace RobotControllerLib
                     }
                 }
             }
+
+            Logger.Log("Connected to brick {0}", brickNo);
 
             return brick;
         }
@@ -128,7 +132,7 @@ namespace RobotControllerLib
         private void SetAngle(Joint joint, int? angle)
         {
             if (angle.HasValue)
-                LeftArm.ShoulderAlong.TargetAngle = angle.Value;
+                joint.TargetAngle = angle.Value;
         }
     }
 }

@@ -66,15 +66,14 @@ namespace RobotSimulator
 
             kinectSensorChooser1.KinectSensorChanged += new DependencyPropertyChangedEventHandler(kinectSensorChooser1_KinectSensorChanged);
 
-            Thread thread = new Thread(new ThreadStart(initialiseRobot));
-            thread.Start();
+            initialiseRobot();
         }
 
         public void initialiseRobot()
         {
             //Set up the real robot: DISABLED - NULL POINTER EXCEPTION WITHOUT ROBOT CONNECTED
-            //RobotControllerLib.Robot robot = new RobotControllerLib.Robot();
-            //synchroniser.setRobotReady(robot);
+            RobotControllerLib.Robot robot = new RobotControllerLib.Robot();
+            synchroniser.setRobotReady(robot);
         }
 
         //KEY EVENTS ***********************************

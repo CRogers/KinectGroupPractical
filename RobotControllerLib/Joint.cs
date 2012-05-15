@@ -6,6 +6,8 @@ namespace RobotControllerLib
 {
     public class Joint
     {
+        public string Name { get; private set; }
+
         private int initialTacho;
 
         private int _targetAngle;
@@ -60,8 +62,10 @@ namespace RobotControllerLib
 
 
 
-        public Joint(NxtMotor motor)
+        public Joint(NxtMotor motor, string name = "Joint")
         {
+            Name = name;
+
             if (motor != null) {
                 Motor = motor;
                 motor.ResetMotorPosition(true);
@@ -92,7 +96,8 @@ namespace RobotControllerLib
         protected void StartUpdateThread()
         {
             // Quickly spawn the update thread using an Async delegate call
-            new Action(UpdateContinuous).BeginInvoke(null, null);
+            if(Motor != null)
+                new Action(UpdateContinuous).BeginInvoke(null, null);
         }
 
         protected void UpdateContinuous()
@@ -115,8 +120,8 @@ namespace RobotControllerLib
                 if (rawDiff > 5)
                 {
                     Motor.Run(power, diff);
-                    if(TargetAngle != 0)
-                        Console.WriteLine("Curr ang: {0}, Target: {1}, Diff: {2}, RawDiff: {3}, Power: {4}", CurrentAngle, TargetAngle, diff, rawDiff, power);
+                    if (TargetAngle != 0)
+                        Logger.Log("Curr ang: {0}, Target: {1}, Diff: {2}, RawDiff: {3}, Power: {4}", CurrentAngle, TargetAngle, diff, rawDiff, power);
                     Thread.Sleep(1000);
                 }
 

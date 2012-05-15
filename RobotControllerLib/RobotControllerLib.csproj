@@ -46,6 +46,7 @@
     <Compile Include="Arm.cs" />
     <Compile Include="Joint.cs" />
     <Compile Include="JointMotorConfig.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="MotorPort.cs" />
     <Compile Include="NxtMotorExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

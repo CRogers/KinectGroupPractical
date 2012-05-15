@@ -37,8 +37,7 @@ namespace RobotControllerLib
 
             RightElbowOut      = new MotorPort(NxtMotorPort.PortA, 2),
             RightShoulderOut   = new MotorPort(NxtMotorPort.PortB, 2),  
-            LeftElbowOut       = new MotorPort(NxtMotorPort.PortC, 2),          
-            
+            LeftElbowOut       = new MotorPort(NxtMotorPort.PortC, 2),
         };
     }
 }
