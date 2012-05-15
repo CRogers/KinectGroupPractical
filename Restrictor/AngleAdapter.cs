@@ -14,7 +14,7 @@ namespace RobotSimulator.Model
         MotorManager manager;
         PositionCalculator posCalc;
         const double EPSILON = .001;
-        const double INCREMENT = Math.PI / 180 * 5;
+        const double INCREMENT = Math.PI / 180 * 10;
         public AngleAdapter(Portable robot)
         {
             this.robot = robot;
@@ -57,10 +57,46 @@ namespace RobotSimulator.Model
             ap.RightElbowOut = round(angles[7]);
             return ap;
         }
-        AnglePositions lastReturned = new AnglePositions();
+        AnglePositions lastReturned = newAnglePositions();
+        LinkedList<AnglePositions> list = new LinkedList<AnglePositions>();
+        private static AnglePositions newAnglePositions()
+        {
+            AnglePositions a = new AnglePositions();
+            a.LeftElbowAlong = 0;
+            a.LeftElbowOut = 0;
+            a.LeftShoulderAlong = 0;
+            a.LeftShoulderOut = 0;
+            a.RightElbowAlong = 0;
+            a.RightElbowOut = 0;
+            a.RightShoulderAlong = 0;
+            a.RightShoulderOut = 0;
+            return a;
+        }
         private void commit(double[] angles)
         {
-            lastReturned = convert(angles);
+            list.AddLast(convert(angles));
+            if (list.Count > 5)
+                list.RemoveFirst();
+            lastReturned=newAnglePositions();
+            foreach(AnglePositions a in list)
+            {
+                lastReturned.LeftElbowAlong += a.LeftElbowAlong;
+                lastReturned.LeftElbowOut += a.LeftElbowOut;
+                lastReturned.LeftShoulderAlong += a.LeftShoulderAlong;
+                lastReturned.LeftShoulderOut += a.LeftShoulderOut;
+                lastReturned.RightElbowAlong += a.RightElbowAlong;
+                lastReturned.RightElbowOut += a.RightElbowOut;
+                lastReturned.RightShoulderAlong += a.RightShoulderAlong;
+                lastReturned.RightShoulderOut += a.RightShoulderOut;
+            }
+            lastReturned.LeftElbowAlong /= list.Count;
+            lastReturned.LeftElbowOut /= list.Count;
+            lastReturned.LeftShoulderAlong /= list.Count;
+            lastReturned.LeftShoulderOut /= list.Count;
+            lastReturned.RightElbowAlong /= list.Count;
+            lastReturned.RightElbowOut /= list.Count;
+            lastReturned.RightShoulderAlong /= list.Count;
+            lastReturned.RightShoulderOut /= list.Count;
             CollisionRestrictor.INSTANCE.commitAngles(lastReturned);
         }
         public void kinectAngles(AnglePositions angles)
