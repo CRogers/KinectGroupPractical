@@ -11,7 +11,7 @@ using RobotSimulator.Model;
 
 namespace RobotSimulator
 {
-    class AngleCalculator
+    public class AngleCalculator
     {
         Vector3D rightWrist;
         Vector3D rightElbow;
@@ -67,10 +67,7 @@ namespace RobotSimulator
                 leftShoulder = getVector(skeleton, JointType.ShoulderLeft);
 
                 leftHip = getVector(skeleton, JointType.HipLeft);
-                updateRightShoulder();
-                updateRightElbow();
-                updateLeftShoulder();
-                updateLeftElbow();
+                updateAngles();
             }
         }
 
@@ -80,21 +77,7 @@ namespace RobotSimulator
             return angles;
         }
 
-        private void updateLeftElbow()
-        {
-            // not implemented yet
-        }
-
-        private void updateLeftShoulder()
-        {
-            // not implemented yet
-        }
-
-        private void updateRightElbow()
-        {
-            // not implemented yet
-        }
-        private void updateRightShoulder()
+        private void updateAngles()
         {
             Point3D s = rightShoulder.toPoint(), e = rightElbow.toPoint(), h = rightWrist.toPoint();
             Point3D v1 = MM.cross(MM.sub(e, s), new Point3D(1, 0, 0));
@@ -180,9 +163,6 @@ namespace RobotSimulator
 
             //angles.rightShoulder1 = rightShoulderTheta;
             //angles.rightShoulder2 = rightShoulderPhi;
-
-
-
         }
         private Vector3D diff(Vector3D v1, Vector3D v2)
         {

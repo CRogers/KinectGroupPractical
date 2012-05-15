@@ -18,9 +18,9 @@ namespace Restrictor
         private Timer timer; //the timers for each motor
         //The two robots that are used in by the algorithms.
         Portable fictionalRobot;
-        Portable realRobot;
+        Portable kinectRobot;
         AnglePositions realAngles;
-        private bool robotReady;
+        private bool robotReady = false;
         private RobotControllerLib.Robot robot;
         private CollisionRestrictor()
         {
@@ -31,11 +31,12 @@ namespace Restrictor
             initialise(new Viewport3D());
         }
 
-        //Initialise the robots with a view port so that the 
+        //Initialise the robots with a view port so that the robot will be displayed on screen
         public void initialise(Viewport3D viewport)
         {
-            realRobot = new Portable(viewport);
+            kinectRobot = new Portable(viewport);
             fictionalRobot = new Portable();
+            realAngles = new AnglePositions();
         }
 
         public void setRobotReady(RobotControllerLib.Robot robot)
@@ -51,6 +52,12 @@ namespace Restrictor
             {
                 listener.robotReady();
             }
+        }
+
+        //Return whether or not the robot is ready
+        public bool isRobotReady()
+        {
+            return robotReady;
         }
 
         public void stopRobot()
@@ -74,9 +81,8 @@ namespace Restrictor
         //Updates the robot's angles throught the alternative thread
         private void updateRealMotors()
         {
-            if (robotReady)
+            if (isRobotReady())
             {
-                realAngles = new AnglePositions();
                 realAngles.LeftElbowAlong = robot.LeftArm.ElbowAlong.CurrentAngle;
                 realAngles.LeftElbowOut = robot.LeftArm.ElbowOut.CurrentAngle;
                 realAngles.LeftShoulderAlong = robot.LeftArm.ShoulderAlong.CurrentAngle;
@@ -85,12 +91,16 @@ namespace Restrictor
                 realAngles.RightElbowOut = robot.RightArm.ElbowOut.CurrentAngle;
                 realAngles.RightShoulderAlong = robot.RightArm.ShoulderAlong.CurrentAngle;
                 realAngles.RightShoulderOut = robot.RightArm.ShoulderOut.CurrentAngle;
-                realRobot.setAngles(realAngles);
             }
         }
 
+        public Portable getKinectRobot()
+        {
+            return kinectRobot;
+        }
+
         //Get the robot to play with. This will be null if the class has not been properly intialised!
-        public Portable pretendRobot()
+        public Portable getPretendRobot()
         {
             //for playing with
             return fictionalRobot;
@@ -99,7 +109,7 @@ namespace Restrictor
         //Tell the class to try setting the real robot's angles.
         public void commitAngles(AnglePositions angles)
         {
-            if (robotReady)
+            if (isRobotReady())
             {
                 robot.SetAngles(angles);
             }
@@ -108,6 +118,7 @@ namespace Restrictor
         //For sending in data from the Kinect
         public void kinectDataIn(AnglePositions angles)
         {
+            kinectRobot.setAngles(angles); //for display purposes
             foreach (var listener in listeners)
             {
                 listener.kinectAngles(angles);
@@ -118,9 +129,9 @@ namespace Restrictor
         /// This will enable the real robot to be displayed on screen
         /// </summary>
         /// <param name="keyHandler">The key handler to use.</param>
-        public void setKeyHandler(I_Observable<I_KeyListener> keyHandler)
+        public void setCameraToListenToKeys(I_Observable<I_KeyListener> keyHandler)
         {
-            realRobot.setCameraToListenToKeys(keyHandler);
+            kinectRobot.setCameraToListenToKeys(keyHandler);
         }
 
         //Deal with the listeners:

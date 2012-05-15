@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Restrictor;
 
 namespace RobotSimulator
 {
-    class AngleSet
+    public class AngleSet
     {
         public Double rightShoulder1;
         public Double rightShoulder2;
@@ -26,6 +27,24 @@ namespace RobotSimulator
             leftShoulder2 = 0;
             leftElbow1 = 0;
             leftElbow2 = 0;
+        }
+
+        /// <summary>
+        /// Convert the AngleSet object to an AnglePositions object.
+        /// </summary>
+        /// <returns>The AnglePositions object</returns>
+        public AnglePositions toAnglePositions()
+        {
+            AnglePositions angles = new AnglePositions();
+            angles.RightElbowOut = (int)rightElbow2;
+            angles.RightElbowAlong = (int)rightElbow1;
+            angles.RightShoulderOut = (int)rightShoulder2;
+            angles.RightShoulderAlong = (int)rightShoulder1;
+            angles.LeftElbowOut = (int)leftElbow2;
+            angles.LeftElbowAlong = (int)leftElbow1;
+            angles.LeftShoulderOut = (int)leftShoulder2;
+            angles.LeftShoulderAlong = (int)leftShoulder1;
+            return angles;
         }
 
     }

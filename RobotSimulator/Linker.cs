@@ -11,7 +11,7 @@ using RobotSimulator.Utility;
 namespace RobotSimulator
 {
     //This class links the classes in the solution together to enable the robot to function!
-    class Linker
+    public class Linker
     {
         //Create a linker without hooking it up to any key input (this will not let you move the camera,
         //so it is not advised).

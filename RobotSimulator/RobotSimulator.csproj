@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{171BD84B-3805-40A8-8332-D4F68E8862E8}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RobotSimulator</RootNamespace>
     <AssemblyName>RobotSimulator</AssemblyName>
@@ -35,16 +35,19 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Coding4Fun.Kinect.Wpf">
-      <HintPath>..\..\RobotSimulator\bin\Debug\Coding4Fun.Kinect.Wpf.dll</HintPath>
+      <HintPath>.\Coding4Fun.Kinect.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="KinectTest">
       <HintPath>..\..\RobotSimulator\bin\Debug\KinectTest.exe</HintPath>
     </Reference>
     <Reference Include="Microsoft.Kinect, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Samples.Kinect.WpfViewers">
-      <HintPath>..\..\..\..\..\Downloads\KinectforWindowsSDKV1\Dependencies\KinectWpfViewers\bin\Release\Microsoft.Samples.Kinect.WpfViewers.dll</HintPath>
+      <HintPath>.\Microsoft.Samples.Kinect.WpfViewers.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -61,10 +64,6 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
     <Compile Include="AngleCalculator.cs" />
     <Compile Include="AngleSet.cs" />
     <Compile Include="Controller\KeyInputController.cs" />
@@ -76,18 +75,6 @@
     <Compile Include="Utility\MoreMaths.cs" />
     <Compile Include="Utility\I_KeyListener.cs" />
     <Compile Include="Views\ViewPlatform.cs" />
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\Robot.cs" />

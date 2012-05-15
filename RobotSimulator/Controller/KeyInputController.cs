@@ -13,7 +13,7 @@ namespace RobotSimulator.Controller
     //commands to move the motors. This is an example class of how other projects can interacts
     //with the virtual motors. The motors are over parameterised intentionally so that
     //when the robot is actually built they can be callibrated if necessary to match it.
-    class KeyInputController : I_KeyListener
+    public class KeyInputController : I_KeyListener
     {
         private MotorManager motorManager;
         private PositionCalculator positionCalculator;
