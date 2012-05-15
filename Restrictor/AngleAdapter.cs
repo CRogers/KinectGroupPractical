@@ -14,7 +14,7 @@ namespace RobotSimulator.Model
         MotorManager manager;
         PositionCalculator posCalc;
         const double EPSILON = .001;
-        const double INCREMENT = Math.PI / 36;
+        const double INCREMENT = Math.PI / 180 * 10;
         public AngleAdapter(Portable robot)
         {
             this.robot = robot;
@@ -25,7 +25,7 @@ namespace RobotSimulator.Model
         {
             if (angle == null)
                 return 0;
-            return ((int)angle) * Math.PI * 2 / 255;
+            return ((int)angle) * Math.PI / 180;
         }
         private double[] convert(AnglePositions angles)
         {
@@ -42,7 +42,7 @@ namespace RobotSimulator.Model
         }
         private int round(double angle)
         {
-            return (int)(angle * 255 / Math.PI / 2 + .5);
+            return (int)(angle * 360 / Math.PI / 2 + .5);
         }
         private AnglePositions convert(double[] angles)
         {
@@ -57,11 +57,54 @@ namespace RobotSimulator.Model
             ap.RightElbowOut = round(angles[7]);
             return ap;
         }
+        AnglePositions lastReturned = newAnglePositions();
+        LinkedList<AnglePositions> list = new LinkedList<AnglePositions>();
+        private static AnglePositions newAnglePositions()
+        {
+            AnglePositions a = new AnglePositions();
+            a.LeftElbowAlong = 0;
+            a.LeftElbowOut = 0;
+            a.LeftShoulderAlong = 0;
+            a.LeftShoulderOut = 0;
+            a.RightElbowAlong = 0;
+            a.RightElbowOut = 0;
+            a.RightShoulderAlong = 0;
+            a.RightShoulderOut = 0;
+            return a;
+        }
+        private void commit(double[] angles)
+        {
+            list.AddLast(convert(angles));
+            if (list.Count > 5)
+                list.RemoveFirst();
+            lastReturned=newAnglePositions();
+            foreach(AnglePositions a in list)
+            {
+                lastReturned.LeftElbowAlong += a.LeftElbowAlong;
+                lastReturned.LeftElbowOut += a.LeftElbowOut;
+                lastReturned.LeftShoulderAlong += a.LeftShoulderAlong;
+                lastReturned.LeftShoulderOut += a.LeftShoulderOut;
+                lastReturned.RightElbowAlong += a.RightElbowAlong;
+                lastReturned.RightElbowOut += a.RightElbowOut;
+                lastReturned.RightShoulderAlong += a.RightShoulderAlong;
+                lastReturned.RightShoulderOut += a.RightShoulderOut;
+            }
+            lastReturned.LeftElbowAlong /= list.Count;
+            lastReturned.LeftElbowOut /= list.Count;
+            lastReturned.LeftShoulderAlong /= list.Count;
+            lastReturned.LeftShoulderOut /= list.Count;
+            lastReturned.RightElbowAlong /= list.Count;
+            lastReturned.RightElbowOut /= list.Count;
+            lastReturned.RightShoulderAlong /= list.Count;
+            lastReturned.RightShoulderOut /= list.Count;
+            CollisionRestrictor.INSTANCE.commitAngles(lastReturned);
+        }
         public void kinectAngles(AnglePositions angles)
         {
-            if (!ready)
-                return;
+            //if (!ready)
+            //    return;
             double[] prevAngles = convert(CollisionRestrictor.INSTANCE.getRealAngles());
+            prevAngles = convert(lastReturned);
             Point3D[] target = computeKeyPositions(convert(angles));
             double[] fds = new double[8];
             for (int x = 0; x < 8; x++)
@@ -79,9 +122,9 @@ namespace RobotSimulator.Model
             double fdError = computeError(fds, target);
             double prevError = computeError(prevAngles, target);
             if (fdError <= prevError && fdError <= pError)
-                CollisionRestrictor.INSTANCE.commitAngles(convert(fds));
+                commit(fds);
             else if (pError <= prevError)
-                CollisionRestrictor.INSTANCE.commitAngles(convert(perturbation));
+                commit(perturbation);
         }
         private static Random random=new Random();
         private double[] perturb(Point3D[] target, double[] angles)
@@ -116,7 +159,8 @@ namespace RobotSimulator.Model
             a[index] += EPSILON;
             double[] b = (double[])angles.Clone();
             b[index] -= EPSILON;
-            return (computeError(a,target)-computeError(b,target))/EPSILON/2;
+            double e1 = computeError(a, target), e2 = computeError(b, target);
+            return (e1-e2)/EPSILON/2;
         }
         private double computeError(double[] angles, Point3D[] target)
         {
@@ -125,9 +169,10 @@ namespace RobotSimulator.Model
         private double computeError(double ls1, double ls2, double le1, double le2,
             double rs1, double rs2, double re1, double re2, Point3D[] target)
         {
-            return computeTargetError(ls1, ls2, le1, le2, rs1, rs2, re1, re2, target)
-                + computeCollisionError(ls1, ls2, le1, le2, rs1, rs2, re1, re2)
-                + computeSanityError(ls1, ls2, le1, le2, rs1, rs2, re1, re2);
+            double targetError = computeTargetError(ls1, ls2, le1, le2, rs1, rs2, re1, re2, target),
+                collisionError = computeCollisionError(ls1, ls2, le1, le2, rs1, rs2, re1, re2),
+                sanityError =  computeSanityError(ls1, ls2, le1, le2, rs1, rs2, re1, re2);
+            return targetError + collisionError + sanityError;
         }
         private double computeTargetError(double ls1, double ls2, double le1, double le2,
             double rs1, double rs2, double re1, double re2, Point3D[] target)
@@ -142,10 +187,19 @@ namespace RobotSimulator.Model
         {
             return computeKeyPositions(angles[0], angles[1], angles[2], angles[3], angles[4], angles[5], angles[6], angles[7]);
         }
-        private Point3D[] computeKeyPositions(double? ls1, double? ls2, double? le1, double? le2,
-            double? rs1, double? rs2, double? re1, double? re2)
+        private Point3D[] computeKeyPositions(double ls1, double ls2, double le1, double le2,
+            double rs1, double rs2, double re1, double re2)
         {
-            return new Point3D[]{posCalc.getLeftElbowCentreCoords(ls1, ls2, null),
+            ls1 = MoreMaths.RadToDeg(ls1);
+            ls2 = MoreMaths.RadToDeg(ls2);
+            le1 = MoreMaths.RadToDeg(le1);
+            le2 = MoreMaths.RadToDeg(le2);
+            rs1 = MoreMaths.RadToDeg(rs1);
+            rs2 = MoreMaths.RadToDeg(rs2);
+            re1 = MoreMaths.RadToDeg(re1);
+            re2 = MoreMaths.RadToDeg(re2);
+            return new Point3D[]{
+                posCalc.getLeftElbowCentreCoords(ls1, ls2, null),
                 posCalc.getLeftShoulderCentreCoords(null),
                 posCalc.getLeftHandCoords(le1, le2, ls1, ls2, null, new Point3D(0, 0, 0)),
                 posCalc.getRightElbowCentreCoords(rs1, rs2, null),
@@ -157,9 +211,9 @@ namespace RobotSimulator.Model
         private double computeCollisionError(double ls1, double ls2, double le1, double le2,
             double rs1, double rs2, double re1, double re2)
         {
-            double torsoRadius = robot.getSize(Portable.CHEST,Portable.WIDTH);
-            double armRadius = robot.getSize(Portable.LEFTUPPERARM,Portable.WIDTH);
-            double forearmRadius = robot.getSize(Portable.LEFTLOWERARM,Portable.WIDTH);
+            double torsoRadius = robot.getSize(Portable.CHEST,Portable.WIDTH) / 2;
+            double armRadius = robot.getSize(Portable.LEFTUPPERARM,Portable.WIDTH) / 2;
+            double forearmRadius = robot.getSize(Portable.LEFTLOWERARM,Portable.WIDTH) / 2;
             Point3D[] keyPoints = computeKeyPositions(ls1, ls2, le1, le2, rs1, rs2, re1, re2);
             double error = 0;
             foreach (double d in CollisionDetector.getDistances(keyPoints, torsoRadius, armRadius, forearmRadius))
@@ -169,14 +223,14 @@ namespace RobotSimulator.Model
         private double computeSanityError(double ls1, double ls2, double le1, double le2,
             double rs1, double rs2, double re1, double re2)
         {
-            double s1min = 0,
-                s1max = pi / 2,
-                s2min = -pi / 2,
-                s2max = pi / 2,
-                e1min = -pi / 2,
-                e1max = pi / 2,
+            double s1min = -100 * pi,
+                s1max = 100 * pi,
+                s2min = 0,
+                s2max = pi,
+                e1min = 0,
+                e1max = 2 * pi / 3,
                 e2min = -pi / 2,
-                e2max = -pi / 2;//TODO these will presumably come from Callum?
+                e2max = pi / 2;//TODO these will presumably come from Callum?
             return bf(-s1min + ls1)
                 + bf(s1max - ls1)
                 + bf(-s2min + ls2)
@@ -196,11 +250,11 @@ namespace RobotSimulator.Model
         }
         private double bf(double overlap)
         {
-            return Math.Exp(-10 * overlap);
+            return Math.Exp(-0 * overlap);
         }
         private double cf(double overlap)
         {
-            return Math.Exp(-20 * overlap);
+            return Math.Exp(-10 * overlap);
         }
         const double pi = Math.PI;
         private Boolean ready = false;

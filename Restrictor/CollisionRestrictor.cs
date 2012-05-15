@@ -110,6 +110,8 @@ namespace Restrictor
         //Tell the class to try setting the real robot's angles.
         public void commitAngles(AnglePositions angles)
         {
+
+            kinectRobot.setAngles(angles); //for display purposes
             if (isRobotReady())
             {
                 robot.SetAngles(angles);
@@ -119,8 +121,6 @@ namespace Restrictor
         //For sending in data from the Kinect
         public void kinectDataIn(AnglePositions angles)
         {
-            
-            kinectRobot.setAngles(angles); //for display purposes
             /*
             foreach (var listener in listeners)
             {
