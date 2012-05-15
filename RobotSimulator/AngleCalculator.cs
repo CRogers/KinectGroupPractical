@@ -79,90 +79,26 @@ namespace RobotSimulator
 
         private void updateAngles()
         {
-            Point3D s = rightShoulder.toPoint(), e = rightElbow.toPoint(), h = rightWrist.toPoint();
-            Point3D v1 = MM.cross(MM.sub(e, s), new Point3D(1, 0, 0));
-            Point3D v2 = MM.cross(new Point3D(1, 0, 0), v1);
-            Point3D v3 = MM.cross(v1, MM.sub(h, e));
-            double s1 = computeAngle(v1, new Point3D(0, 0, 1), new Point3D(-1, 0, 0));
-            double s2 = computeAngle(v2, MM.sub(e, s), v1);
-            angles.rightShoulder1 = MM.RadToDeg(s1);
-            angles.rightShoulder2 = MM.RadToDeg(s2);
-            Matrix3D mat1 = T.makeAxisTransform(Axis.X,MM.RadToDeg(-s1)).Value;
-            Matrix3D mat2 = T.makeAxisTransform(Axis.Z, MM.RadToDeg(-s2)).Value;
-            Matrix3D mat3 = T.makeAxisTransform(Axis.Y, -90).Value;
-            e = mat1.Transform(e);
-            e = mat2.Transform(e);
-            h = mat1.Transform(h);
-            h = mat2.Transform(h);
-            /*e = mat3.Transform(e);
-            h = mat3.Transform(h);
-            s = mat1.Transform(s);
-            s = mat2.Transform(s);
-            s = mat3.Transform(s);
-            Point3D test = MM.norm(MM.sub(s, e));
-            if (test.X * test.X + test.Z * test.Z > .001)
-            {
-                System.Windows.MessageBox.Show((test.X).ToString());
-            }*/
-                
-            v1 = MM.cross(MM.sub(h, e), new Point3D(1, 0, 0));
-            v2 = MM.cross(new Point3D(1, 0, 0), v1);
-            angles.rightElbow1 = MM.RadToDeg(computeAngle(v1, new Point3D(0, 0, 1), new Point3D(-1, 0, 0)));
-            angles.rightElbow2 = MM.RadToDeg(computeAngle(v2, MM.sub(h, e), v1));
-            
-            s = leftShoulder.toPoint();
-            e = leftElbow.toPoint();
-            h = leftWrist.toPoint();
-            v1 = MM.cross(MM.sub(e, s), new Point3D(1, 0, 0));
-            v2 = MM.cross(new Point3D(1, 0, 0), v1);
-            v3 = MM.cross(v1, MM.sub(h, e));
-            s1 = computeAngle(v1, new Point3D(0, 0, 1), new Point3D(-1, 0, 0));
-            s2 = computeAngle(v2, MM.sub(e, s), v1);
-            angles.leftShoulder1 = MM.RadToDeg(s1);
-            angles.leftShoulder2 = -MM.RadToDeg(s2);
-            mat1 = T.makeAxisTransform(Axis.X, MM.RadToDeg(-s1)).Value;
-            mat2 = T.makeAxisTransform(Axis.Z, MM.RadToDeg(-s2)).Value;
-            mat3 = T.makeAxisTransform(Axis.Y, -90).Value;
-            e = mat1.Transform(e);
-            e = mat2.Transform(e);
-            h = mat1.Transform(h);
-            h = mat2.Transform(h);
-            //e = mat3.Transform(e);
-            //sh = mat3.Transform(h);
-            v1 = MM.cross(MM.sub(h, e), new Point3D(1, 0, 0));
-            v2 = MM.cross(new Point3D(1, 0, 0), v1);
-            angles.leftElbow1 = MM.RadToDeg(computeAngle(v1, new Point3D(0, 0, 1), new Point3D(-1, 0, 0)));
-            angles.leftElbow2 = -MM.RadToDeg(computeAngle(v2, MM.sub(h, e), v1));
-            //angles.rightElbow1 = MM.RadToDeg(e1);
-            //angles.rightElbow2 = MM.RadToDeg(e2);
-            //// this code contains various adjustments to get the correct angles for moving the right shoulder
-            //Vector3D rightShoulderToElbow = diff(rightElbow, rightShoulder);
-
-            //Double rightShoulderPhi = 90 + (((Math.Atan(rightShoulderToElbow.Y / rightShoulderToElbow.X)) / Math.PI) * 180);
-            //Double rightShoulderTheta = (((Math.Acos(rightShoulderToElbow.Z / rightShoulderToElbow.Length)) / Math.PI) * 180) - 90;
-
-            //if (rightShoulder.X > rightElbow.X)
-            //{
-            //    rightShoulderPhi = 180 + rightShoulderPhi;
-            //}
-
-            //if (rightShoulderPhi > 90)
-            //{
-            //    rightShoulderPhi = 180 - rightShoulderPhi;
-            //}
-
-            //if (rightShoulder.Y < rightElbow.Y)
-            //{
-            //    rightShoulderTheta = 180 - rightShoulderTheta;
-            //}
-
-            //if ((rightShoulder.X > rightElbow.X) && (rightShoulder.Y > rightElbow.Y))
-            //{
-            //    rightShoulderTheta = rightShoulderTheta + 180;
-            //}
-
-            //angles.rightShoulder1 = rightShoulderTheta;
-            //angles.rightShoulder2 = rightShoulderPhi;
+            Point3D ls = MM.neg(leftShoulder.toPoint(), 'x', 'z'),
+                le = MM.neg(leftElbow.toPoint(), 'x', 'z'),
+                lh = MM.neg(leftWrist.toPoint(), 'x', 'z'),
+                rs = MM.neg(rightShoulder.toPoint(), 'x', 'z'),
+                re = MM.neg(rightElbow.toPoint(), 'x', 'z'),
+                rh = MM.neg(rightWrist.toPoint(),'x','z');
+            Point3D ls1axis = new Point3D(1, 0, 0);
+            Point3D ls2axis = MM.cross(MM.sub(le, ls), ls1axis);
+            Point3D le2axis = MM.cross(ls2axis, MM.sub(lh, le));
+            angles.leftShoulder1 = MM.RadToDeg(computeAngle(ls2axis, new Point3D(0, 0, 1), ls1axis));
+            angles.leftShoulder2 = MM.RadToDeg(computeAngle(MM.cross(ls1axis, ls2axis), MM.sub(le, ls), ls2axis));
+            angles.leftElbow2 = MM.RadToDeg(computeAngle(MM.sub(le, ls), MM.cross(le2axis, ls2axis), ls2axis));
+            angles.leftElbow1 = MM.RadToDeg(computeAngle(MM.sub(lh, le), MM.cross(le2axis, ls2axis), le2axis));
+            Point3D rs1axis = new Point3D(1, 0, 0);
+            Point3D rs2axis = MM.cross(MM.sub(re, rs), rs1axis);
+            Point3D re2axis = MM.cross(rs2axis, MM.sub(rh, re));
+            angles.rightShoulder1 = MM.RadToDeg(computeAngle(rs2axis, new Point3D(0, 0, 1), rs1axis));
+            angles.rightShoulder2 = MM.RadToDeg(-computeAngle(MM.cross(rs1axis, rs2axis), MM.sub(re, rs), rs2axis));
+            angles.rightElbow2 = MM.RadToDeg(-computeAngle(MM.sub(re, rs), MM.cross(re2axis, rs2axis), rs2axis));
+            angles.rightElbow1 = MM.RadToDeg(computeAngle(MM.sub(rh, re), MM.cross(re2axis, rs2axis), re2axis));
         }
         private Vector3D diff(Vector3D v1, Vector3D v2)
         {

@@ -40,6 +40,21 @@ namespace RobotSimulator.Utility
         {
             return mul(p, -1);
         }
+        public static Point3D neg(Point3D p, char ax)
+        {
+            if (ax == 'x')
+                return new Point3D(-p.X, p.Y, p.Z);
+            else if (ax == 'y')
+                return new Point3D(p.X, -p.Y, p.Z);
+            else if (ax == 'z')
+                return new Point3D(p.X, p.Y, -p.Z);
+            else
+                throw new ArgumentException("invalid axis");
+        }
+        public static Point3D neg(Point3D p, char ax1, char ax2)
+        {
+            return neg(neg(p, ax1), ax2);
+        }
         public static Point3D mul(Point3D p, double s)
         {
             return new Point3D(p.X * s, p.Y * s, p.Z * s);

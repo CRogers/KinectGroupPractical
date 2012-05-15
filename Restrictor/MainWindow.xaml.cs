@@ -77,6 +77,7 @@ namespace RobotSimulator
             //synchroniser.setRobotReady(robot);
         }
 
+        //KEY EVENTS ***********************************
         private void viewport_KeyDown(object sender, KeyEventArgs e)
         {
             //Forward the key down event to all the listeners:
@@ -128,9 +129,9 @@ namespace RobotSimulator
                     {
                         Smoothing = 0.5f,
                         Correction = 0.5f,
-                        Prediction = 0.5f,
-                        JitterRadius = 0.0f,
-                        MaxDeviationRadius = 0.5f
+                        Prediction = 0.8f,
+                        JitterRadius = 0.3f,
+                        MaxDeviationRadius = 1.0f
 
 
 
