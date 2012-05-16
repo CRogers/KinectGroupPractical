@@ -17,7 +17,7 @@ using RobotSimulator.Model;
 using RobotSimulator.Controller;
 using Microsoft.Kinect;
 using Restrictor;
-using System.Threading;
+using System.Timers;
 
 
 namespace RobotSimulator
@@ -32,7 +32,7 @@ namespace RobotSimulator
         private CollisionRestrictor synchroniser = CollisionRestrictor.INSTANCE;
         //*****************************************CHANGED**********************************
         //Linker linker;
-
+        private Timer timer; //FOR TESTING
         bool closing = false;
 
         const int skeletonCount = 6;
@@ -65,8 +65,30 @@ namespace RobotSimulator
             //p.setMotor(MotorManager.LEFT_SHOULDER_MOTOR1, 90);
 
             kinectSensorChooser1.KinectSensorChanged += new DependencyPropertyChangedEventHandler(kinectSensorChooser1_KinectSensorChanged);
-
-            initialiseRobot();
+            //FOR TESTING:
+            
+            /*
+            timer = new Timer(1); //get the timing going to keep syncrhonised.
+            timer.AutoReset = true;
+            timer.Elapsed += delegate { sendData(); };
+            timer.Start(); //get going!
+             */
+            
+            //initialiseRobot();
+        }
+        AnglePositions angles = new AnglePositions();
+        //FOR TESTING
+        public void sendData() {
+            //MessageBox.Show("Here!");
+            angles.LeftElbowAlong += 1;
+            angles.LeftShoulderAlong += 1;
+            angles.RightElbowAlong += 1;
+            angles.RightShoulderAlong += 1;
+            angles.LeftElbowOut += 1;
+            angles.LeftShoulderOut += 1;
+            angles.RightShoulderOut += 1;
+            angles.RightElbowOut += 1;
+            synchroniser.kinectDataIn(angles);
         }
 
         public void initialiseRobot()

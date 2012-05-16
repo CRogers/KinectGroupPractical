@@ -47,7 +47,7 @@ namespace Restrictor
             timer.AutoReset = true;
             timer.Elapsed += delegate { updateRealMotors(); };
             timer.Start(); //get going!
-            //Alert all the listeners that the robot cannot be commanded.
+            //Alert all the listeners that the robot can be commanded.
             foreach (var listener in listeners)
             {
                 listener.robotReady();
@@ -126,7 +126,8 @@ namespace Restrictor
             {
                 listener.kinectAngles(angles);
             }
-             * */
+             */
+            //Due to bug:
             commitAngles(angles);
         }
 

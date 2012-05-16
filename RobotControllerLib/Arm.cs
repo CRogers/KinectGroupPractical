@@ -16,8 +16,8 @@ namespace RobotControllerLib
         {
             ShoulderAlong = new Joint(shoulderAlong, name+"ShoulderAlong") {DegreeScaleFactor = 24, MinAngle = -270, MaxAngle = 270};
             ShoulderOut = new Joint(shoulderOut, name + "ShoulderOut") { DegreeScaleFactor = 24, MinAngle = 0, MaxAngle = 200 };
-            ElbowAlong = new Joint(elbowAlong, name + "ElbowAlong") { Power = 5, MinAngle = 0, MaxAngle = 115 };
-            ElbowOut = new Joint(elbowOut, name + "ElbowOut") { Power = 5, MinAngle = -100, MaxAngle = 100 };
+            ElbowAlong = new Joint(elbowAlong, name + "ElbowAlong") { Power = 10, MinAngle = 0, MaxAngle = 115 };
+            ElbowOut = new Joint(elbowOut, name + "ElbowOut") { Power = 10, MinAngle = -100, MaxAngle = 100 };
         }
     }
 }

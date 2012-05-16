@@ -25,8 +25,8 @@ namespace RobotControllerLib
             LinkTypes = new[] {link1, link2, link3};
         }
 
-        // Bluetooth: 3, 9, 11. USB: 2, 4, 3
-        public static JointMotorConfig Default = new JointMotorConfig(2, NxtCommLinkType.USB, 4, NxtCommLinkType.USB, 3, NxtCommLinkType.USB)
+        // Bluetooth: 3, 9, 11. USB: (CALLUM) 2, 4, 3 (michael) 4, 3, 2
+        public static JointMotorConfig Default = new JointMotorConfig(3, NxtCommLinkType.Bluetooth, 5, NxtCommLinkType.Bluetooth, 7, NxtCommLinkType.Bluetooth)
         {
             RightElbowAlong    = new MotorPort(NxtMotorPort.PortA, 0),
             LeftShoulderOut    = new MotorPort(NxtMotorPort.PortB, 0),

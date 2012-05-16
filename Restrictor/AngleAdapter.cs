@@ -78,16 +78,26 @@ namespace RobotSimulator.Model
             if (list.Count > 5)
                 list.RemoveFirst();
             lastReturned=newAnglePositions();
-            foreach(AnglePositions a in list)
+            try
             {
-                lastReturned.LeftElbowAlong += a.LeftElbowAlong;
-                lastReturned.LeftElbowOut += a.LeftElbowOut;
-                lastReturned.LeftShoulderAlong += a.LeftShoulderAlong;
-                lastReturned.LeftShoulderOut += a.LeftShoulderOut;
-                lastReturned.RightElbowAlong += a.RightElbowAlong;
-                lastReturned.RightElbowOut += a.RightElbowOut;
-                lastReturned.RightShoulderAlong += a.RightShoulderAlong;
-                lastReturned.RightShoulderOut += a.RightShoulderOut;
+                foreach (AnglePositions a in list)
+                {
+                    lastReturned.LeftElbowAlong += a.LeftElbowAlong;
+                    lastReturned.LeftElbowOut += a.LeftElbowOut;
+                    lastReturned.LeftShoulderAlong += a.LeftShoulderAlong;
+                    lastReturned.LeftShoulderOut += a.LeftShoulderOut;
+                    lastReturned.RightElbowAlong += a.RightElbowAlong;
+                    lastReturned.RightElbowOut += a.RightElbowOut;
+                    lastReturned.RightShoulderAlong += a.RightShoulderAlong;
+                    lastReturned.RightShoulderOut += a.RightShoulderOut;
+                }
+            }
+            catch (InvalidOperationException e)
+            {
+                //Abort this attempt
+                commit(angles);
+                return;
+                //CollisionRestrictor.INSTANCE.commitAngles(lastReturned);
             }
             lastReturned.LeftElbowAlong /= list.Count;
             lastReturned.LeftElbowOut /= list.Count;
