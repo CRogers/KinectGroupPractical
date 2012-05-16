@@ -107,28 +107,46 @@ namespace Restrictor
             return fictionalRobot;
         }
 
+        private bool pending = false;
+        private int count = 0;
+
         //Tell the class to try setting the real robot's angles.
         public void commitAngles(AnglePositions angles)
         {
-
-            kinectRobot.setAngles(angles); //for display purposes
-            if (isRobotReady())
+            if (angles == null)
             {
-                robot.SetAngles(angles);
+                pending = false;
+                return;
+            }
+            else
+            {
+                kinectRobot.setAngles(angles); //for display purposes
+                if (isRobotReady())
+                {
+                    robot.SetAngles(angles);
+                    pending = false;
+                }
+                else
+                {
+                    pending = false;
+                }
             }
         }
 
         //For sending in data from the Kinect
         public void kinectDataIn(AnglePositions angles)
         {
-            /*
-            foreach (var listener in listeners)
+            if (!pending)
             {
-                listener.kinectAngles(angles);
+                pending = true;
+                foreach (var listener in listeners)
+                {
+                    listener.kinectAngles(angles);
+                }
+
+                //Due to bug:
+                //commitAngles(angles);
             }
-             */
-            //Due to bug:
-            commitAngles(angles);
         }
 
         /// <summary>

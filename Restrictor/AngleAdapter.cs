@@ -91,23 +91,23 @@ namespace RobotSimulator.Model
                     lastReturned.RightShoulderAlong += a.RightShoulderAlong;
                     lastReturned.RightShoulderOut += a.RightShoulderOut;
                 }
+                lastReturned.LeftElbowAlong /= list.Count;
+                lastReturned.LeftElbowOut /= list.Count;
+                lastReturned.LeftShoulderAlong /= list.Count;
+                lastReturned.LeftShoulderOut /= list.Count;
+                lastReturned.RightElbowAlong /= list.Count;
+                lastReturned.RightElbowOut /= list.Count;
+                lastReturned.RightShoulderAlong /= list.Count;
+                lastReturned.RightShoulderOut /= list.Count;
+                CollisionRestrictor.INSTANCE.commitAngles(lastReturned);
             }
             catch (InvalidOperationException e)
             {
                 //Abort this attempt
-                commit(angles);
+                CollisionRestrictor.INSTANCE.commitAngles(null); //signal nothing to change
                 return;
                 //CollisionRestrictor.INSTANCE.commitAngles(lastReturned);
             }
-            lastReturned.LeftElbowAlong /= list.Count;
-            lastReturned.LeftElbowOut /= list.Count;
-            lastReturned.LeftShoulderAlong /= list.Count;
-            lastReturned.LeftShoulderOut /= list.Count;
-            lastReturned.RightElbowAlong /= list.Count;
-            lastReturned.RightElbowOut /= list.Count;
-            lastReturned.RightShoulderAlong /= list.Count;
-            lastReturned.RightShoulderOut /= list.Count;
-            CollisionRestrictor.INSTANCE.commitAngles(lastReturned);
         }
         public void kinectAngles(AnglePositions angles)
         {
@@ -123,7 +123,10 @@ namespace RobotSimulator.Model
             for (int x = 0; x < 8; x++)
                 lSquared += fds[x] * fds[x];
             if (lSquared == 0)
+            {
+                CollisionRestrictor.INSTANCE.commitAngles(null); //signal nothing to change
                 return;
+            }
             lSquared = -Math.Sqrt(lSquared);
             for (int x = 0; x < 8; x++)
                 fds[x] = prevAngles[x] + fds[x] * INCREMENT / lSquared;
@@ -132,9 +135,17 @@ namespace RobotSimulator.Model
             double fdError = computeError(fds, target);
             double prevError = computeError(prevAngles, target);
             if (fdError <= prevError && fdError <= pError)
+            {
                 commit(fds);
+            }
             else if (pError <= prevError)
+            {
                 commit(perturbation);
+            }
+            else
+            {
+                CollisionRestrictor.INSTANCE.commitAngles(null); //send nothing
+            }
         }
         private static Random random=new Random();
         private double[] perturb(Point3D[] target, double[] angles)
