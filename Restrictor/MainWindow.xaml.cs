@@ -67,13 +67,14 @@ namespace RobotSimulator
             kinectSensorChooser1.KinectSensorChanged += new DependencyPropertyChangedEventHandler(kinectSensorChooser1_KinectSensorChanged);
             //FOR TESTING:
             
-            
+            /*
             timer = new Timer(1); //get the timing going to keep syncrhonised.
             timer.AutoReset = true;
             timer.Elapsed += delegate { sendData(); };
             timer.Start(); //get going!
+            */
             
-            
+            //ENABLE FOR ROBOT
             //initialiseRobot();
         }
         AnglePositions angles = new AnglePositions();
@@ -82,14 +83,13 @@ namespace RobotSimulator
             //MessageBox.Show("Here!");
             angles.LeftElbowAlong += 1;
             angles.LeftShoulderAlong += 1;
-            /*
+            
             angles.RightElbowAlong += 1;
             angles.RightShoulderAlong += 1;
             angles.LeftElbowOut += 1;
             angles.LeftShoulderOut += 1;
             angles.RightShoulderOut += 1;
             angles.RightElbowOut += 1;
-            */
             synchroniser.kinectDataIn(angles);
         }
 
